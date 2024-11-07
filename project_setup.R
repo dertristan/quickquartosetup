@@ -542,6 +542,8 @@ copy_images(image_source_paths, presentation_folder)
 
 # Clean Environment
 rm(folders, gitignore_content, quarto_manuscript_content, quarto_presentation_content, scss_content, 
-   biblio_content, biblio_file_paths, image_source_paths, presentation_folder)
+   biblio_content, biblio_file_paths, image_source_paths, presentation_folder,
+   create_folder, create_file_if_not_exists, copy_images,
+   quarto_code1_content, quarto_code2_content, quarto_code3_content)
 
 cat("\nSetup Complete\n")

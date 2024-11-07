@@ -1,6 +1,11 @@
 # PROJECT SETUP SCRIPT #
 ########################
 
+# Title and Author Variables
+title <- "This Could Become Your Next Title"
+subtitle <- "This Could Become Your Next Subtitle"
+author <- "Tristan Muno"
+
 # Define paths for easier customization
 image_source_paths <- list(
   schloss = "C:/R/templates/schloss_tmpl.PNG",
@@ -59,10 +64,10 @@ gitignore_content <- c(
 create_file_if_not_exists(".gitignore", gitignore_content)
 
 # Quarto manuscript template content ####
-quarto_manuscript_content <- "---
-title: This Could Become Your Next Title
-subtitle: This Could Become Your Next Subtitle
-author: Tristan Muno
+quarto_manuscript_content <- paste("---
+title:", title, "
+subtitle:", subtitle, " 
+author:", author, " 
 thanks: I thank the world.
 date: last-modified
 date-format: MMMM D, YYYY
@@ -130,11 +135,11 @@ This is the conclusion. This is the conclusion. This is the conclusion. This is 
 # Appendix {.appendix}
 
 This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix. This is the appendix.
-"
+")
 
 # Quarto presentation template content ####
-quarto_presentation_content <- "---
-author: Tristan Muno
+quarto_presentation_content <- paste("--- 
+author:", author, " 
 date: last-modified
 date-format: MMMM D, YYYY
 bibliography: literature.bib
@@ -150,7 +155,7 @@ editor: visual
 preview-links: true
 ---
 
-## This Could be your Next <br> Title
+##", title, "
 
 ![](images/schloss_tmpl.PNG){width=\"100%\"} 
 {{< meta author >}}
@@ -217,7 +222,7 @@ preview-links: true
 ------------------------------------------------------------------------
 
 ## References
-"
+")
 
 # SCSS theme content ####
 scss_content <- "/*-- scss:defaults --*/
@@ -312,10 +317,10 @@ biblio_content <- "
 "
 
 # Quarto code content ####
-quarto_code1_content <- "---
-title: Code Documentation 1
-subtitle: Data Collection
-author: Tristan Muno
+quarto_code1_content <-  paste("---
+title:", title, "
+subtitle: Code Documentation 1 – Data Collection 
+author:", author, " 
 thanks: I thank the world.
 date: last-modified
 date-format: MMMM D, YYYY
@@ -380,12 +385,12 @@ rm(p_required, p_to_install, packages)
 
 get_sys_details()
 ```
-"
+")
 
-quarto_code2_content <- "---
-title: Code Documentation 2
-subtitle: Data Wrangling
-author: Tristan Muno
+quarto_code2_content <-  paste("---
+title:", title, "
+subtitle: Code Documentation 2 – Data Wrangling
+author:", author, " 
 thanks: I thank the world.
 date: last-modified
 date-format: MMMM D, YYYY
@@ -450,12 +455,12 @@ rm(p_required, p_to_install, packages)
 
 get_sys_details()
 ```
-"
+")
 
-quarto_code3_content <- "---
-title: Code Documentation 3
-subtitle: Data Analysis
-author: Tristan Muno
+quarto_code3_content <-  paste("---
+title:", title, "
+subtitle: Code Documentation 3 – Data Analysis 
+author:", author, " 
 thanks: I thank the world.
 date: last-modified
 date-format: MMMM D, YYYY
@@ -520,7 +525,7 @@ rm(p_required, p_to_install, packages)
 
 get_sys_details()
 ```
-"
+")
 
 # Create files for manuscript, presentation, and theme
 create_file_if_not_exists("manuscript/manuscript.qmd", quarto_manuscript_content)
@@ -544,6 +549,7 @@ copy_images(image_source_paths, presentation_folder)
 rm(folders, gitignore_content, quarto_manuscript_content, quarto_presentation_content, scss_content, 
    biblio_content, biblio_file_paths, image_source_paths, presentation_folder,
    create_folder, create_file_if_not_exists, copy_images,
-   quarto_code1_content, quarto_code2_content, quarto_code3_content)
+   quarto_code1_content, quarto_code2_content, quarto_code3_content,
+   author, title, subtitle)
 
 cat("\nSetup Complete\n")

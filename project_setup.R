@@ -74,9 +74,14 @@ date-format: MMMM D, YYYY
 abstract: This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract. This could become your next abstract.
 
 format: 
-  pdf:
+  wordcount-pdf:
     toc: false
     keep-tex: true
+number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
 biblio-style: apsr
 bibliography: literature.bib
 link-citations: true
@@ -96,6 +101,31 @@ header-includes:
 ---
 
 \\doublespacing
+
+```{r}
+#| label: setup
+
+##############################
+## TIME TO RENDER: tba #######
+##############################
+
+# set width of console output
+options(width = 90)
+
+
+# Install and load required packages
+p_required <- c(
+  \"tidyverse\", # for dplyr, ggplot & co
+  \"here\" # to not worry about working directories
+)
+packages <- rownames(installed.packages())
+p_to_install <- p_required[!(p_required %in% packages)]
+if (length(p_to_install) > 0) {
+  install.packages(p_to_install)
+}
+sapply(p_required, require, character.only = TRUE)
+rm(p_required, p_to_install, packages)
+```
 
 # Intro
 

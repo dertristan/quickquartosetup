@@ -123,6 +123,17 @@ project_setup <- function(
   }
   
   
+  # --- Construct the 'author_with_id' variable ---
+  # The goal is to build a string like:
+  # "Firstname Lastname (Student ID)"
+  if (!is.null(student_id) && student_id != "1234567") {
+    author_with_id <- paste0(author, " (", student_id, ")")
+  } else {
+    # If no student ID was provided, just use the author's name
+    author_with_id <- author
+  }
+  
+  
   # Check for the existence of template images if presentation is TRUE
   # and the UMA style is requested.
   if (presentation && uma_style) {
@@ -235,7 +246,7 @@ project_setup <- function(
 
   # Default PDF Manuscript (No Title Page) -------------------------------------
   
-  quarto_manuscript_content_default <- paste0(
+quarto_manuscript_content_default <- paste0(
     "---
 title: |
   ", title, "
@@ -286,7 +297,7 @@ geometry:
 
 {{< lipsum 2 >}}
 
-## Research Design {#sec-theory}
+## Research Design {#sec-design}
 
 {{< lipsum 2 >}}
 
@@ -311,12 +322,11 @@ geometry:
   )
 
   
+# If statutory declaration is TRUE  
   
-quarto_manuscript_content_default_statutory_decl <- paste0(
-  quarto_manuscript_content_default,
-  "
+stat_decl_content <- "
 \\newpage  
-  
+
 ## Eidesstattliche Erklärung -- Statutory Declaration {.unlisted .unnumbered}
 
 \\noindent Hiermit versichere ich, dass diese Arbeit von mir persönlich verfasst ist
@@ -345,26 +355,129 @@ same applies to all charts, diagrams and illustrations as well as to all Interne
 sources. Moreover, I consent to my paper being electronically stores and
 sent anonymously in order to be checked for plagiarism. I am aware that
 the paper cannot be evaluated and may be graded “failed” (“nicht
-ausreichend”) if the declaration is not made.
+                                                           ausreichend”) if the declaration is not made.
 
 ```{=latex}
 \\vspace{2cm}
 \\noindent
 \\parbox{5cm}{
-    \\hrulefill\\\\
-    Place, Date
+  \\hrulefill\\\\
+  Place, Date
 }
 \\hfill
 \\parbox{5cm}{
-    \\hrulefill\\\\
-    Signature
+  \\hrulefill\\\\
+  Signature
 }
 ```
-  "
+"   
+  
+  
+quarto_manuscript_content_default_statutory_decl <- paste0(
+  quarto_manuscript_content_default,
+  stat_decl_content
   )
   
-  
-  
+
+# PDF Manuscript with Title Page -----------------------------------------------
+ 
+  quarto_manuscript_content_titlepage <- paste0(
+"---
+title: |
+  A Title
+subtitle: |
+  A Subtitle
+abstract: |
+  You can add an abstract here.
+author: 
+  - name: ", author_with_id, "
+    email: test@mail.com
+    affiliations:
+      - name: University of Mannheim
+        department: School of Social Sciences
+thanks: |
+   You can add acknowledgements here. Wordcount: {{< words-body >}}.
+date: last-modified
+date-format: MMMM D, YYYY
+format: 
+  titlepage-pdf:
+    citeproc: false
+    filters:
+      - at: pre-quarto
+        path: _extensions/andrewheiss/wordcount/citeproc.lua
+      - at: pre-quarto
+        path: _extensions/andrewheiss/wordcount/wordcount.lua
+    titlepage: academic
+    toc: false
+    include-in-header:
+      text: |
+        \\usepackage{setspace}
+        \\setlength{\\parindent}{15pt}
+        \\usepackage{multicol}
+        \\usepackage{caption}
+execute:
+  echo: false
+  warning: false
+  eval: true
+  include: true
+  cache: true
+bibliography: references.bib
+biblio-style: apsr
+link-citations: true
+number-sections: true
+papersize: a4
+fontsize: 12pt
+linestretch: 2
+geometry:
+  - top = 2cm
+  - bottom = 2cm
+  - left = 2.5cm
+  - right = 2.5cm
+  - footskip = 20pt
+---
+    
+## Introduction {#sec-introduction} 
+    
+{{< lipsum 2 >}}
+
+## Theory {#sec-theory}
+
+{{< lipsum 2 >}}
+
+## Research Design {#sec-design}
+
+{{< lipsum 2 >}}
+
+## Empirical Analysis {#sec-analysis}
+
+{{< lipsum 2 >}}
+
+## Conclusion {#sec-conclusion}
+
+{{< lipsum 2 >}}
+    
+\\singlespacing
+
+## References
+
+::: {#refs}
+:::
+
+## Appendix {.appendix}
+    
+"
+  )
+
+
+
+
+quarto_manuscript_content_titlepage_statutory_decl <- paste0(
+  quarto_manuscript_content_titlepage,
+  stat_decl_content
+)
+
+
+
 
   ### --------------------------------------------------------------------------
   ### 6. Main Logic: Folder and File Creation

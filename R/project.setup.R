@@ -55,7 +55,7 @@ project_setup <- function(
   # --------------------------------------------------------------------------
   # 1. Input Validation and Argument Checks
   # --------------------------------------------------------------------------
-  
+
   # Ensure a project name is a non-empty character string.
     stopifnot(
         "You must provide a 'project_name'." = project_name != "",
@@ -69,11 +69,11 @@ project_setup <- function(
             "It is recommended to use a name without these for folder creation (e.g., 'my_project' or 'MyProject')."
         )
     }
-  
-  
+
+
   # Construct the full project path.
   full_project_path <- file.path(target_path, project_name)
-  
+
   # Check if the project directory already exists and if overwriting is disallowed.
   if (dir.exists(full_project_path) && !overwrite) {
     stop(
@@ -81,7 +81,7 @@ project_setup <- function(
       "Set `overwrite = TRUE` to continue (files may be overwritten)."
     )
   }
-  
+
   # Handle NULL values for metadata by providing sensible defaults.
   # Get the system username for 'author'. We check multiple environment variables
   # for cross-platform compatibility.
@@ -94,28 +94,28 @@ project_setup <- function(
       author <- Sys.getenv("USERNAME", unset = "Your Name Here")
     }
   }
-  
+
   if (is.null(institution)) institution <- "Your Institution"
   if (is.null(mail)) mail <- "your.email@your.institution.com"
   if (is.null(student_id)) student_id <- "1234567"
   if (is.null(title)) title <- "Untitled Project"
   if (is.null(subtitle)) subtitle <- "A great project"
-  
+
   # --- Construct the 'author_with_details' string for the YAML header ---
   # The goal is to build a string like: "Firstname Lastname^[Institution; Mail: email; student ID: id]"
-  
+
   # Check and convert student_id to character if necessary.
   if (!is.null(student_id) && !is.character(student_id)) {
     student_id <- as.character(student_id)
   }
-  
+
   # Build a vector of details strings only for non-default values.
   details <- c(
     if (!is.null(institution) && institution != "Your Institution") institution,
     if (!is.null(mail) && mail != "your.email@your.institution.com") paste0("Mail: ", mail),
     if (!is.null(student_id) && student_id != "1234567") paste0("Student ID: ", student_id)
   )
-  
+
   # Combine the details into a single string, separated by semicolons.
   if (length(details) > 0) {
     author_with_details <- paste0(author, "^[", paste(details, collapse = "; "), "]")
@@ -123,7 +123,7 @@ project_setup <- function(
     # If no non-default details were provided, just use the author's name.
     author_with_details <- author
   }
-  
+
   # --- Construct the 'author_with_id' variable ---
   # The goal is to build a string like: "Firstname Lastname (Student ID)"
   if (!is.null(student_id) && student_id != "1234567") {
@@ -132,14 +132,14 @@ project_setup <- function(
     # If no non-default student ID was provided, just use the author's name.
     author_with_id <- author
   }
-  
+
   # Check for the existence of template images if presentation is TRUE
   # and the UMA style is requested.
   if (presentation && uma_style) {
     # Check if each file exists.
     logo_file_exists <- file.exists(logo_path)
     image_file_exists <- file.exists(title_image_path)
-    
+
     if (!logo_file_exists || !image_file_exists) {
       # If any images are missing, throw a warning and disable the UMA style.
       warning(
@@ -150,19 +150,20 @@ project_setup <- function(
       uma_style <- FALSE
     }
   }
-  
+
   # --------------------------------------------------------------------------
   # 2. Helper Functions (Encapsulated)
   # --------------------------------------------------------------------------
-  
-  #' Create a Folder if It Does Not Exist
-  #'
-  #' This helper function ensures a specified folder path exists. If the folder
-  #' does not exist, it creates it recursively. It provides informative messages
-  #' about the action taken.
-  #'
-  #' @param folder_path A character string specifying the path of the folder to create.
-  #' @return Invisible `NULL`. Called for its side effects (folder creation and messages).
+
+  ## Create a Folder if It Does Not Exist
+  ##
+  ## This helper function ensures a specified folder path exists. If the folder
+  ## does not exist, it creates it recursively. It provides informative messages
+  ## about the action taken.
+  ##
+  ## @param folder_path A character string specifying the path of the folder to create.
+  ## @return Invisible `NULL`. Called for its side effects (folder creation and messages).
+
   create_folder <- function(folder_path) {
     if (!dir.exists(folder_path)) {
       # Create the directory recursively, meaning any necessary parent directories
@@ -175,27 +176,27 @@ project_setup <- function(
     }
     invisible(NULL) # Return invisible NULL as this function is for side effects
   }
-  
-  #' Create or Overwrite a File with Specified Content
-  #'
-  #' This helper function writes content to a file. It checks for the file's
-  #' existence and respects the `overwrite` flag. If `overwrite` is `FALSE` and
-  #' the file exists, it will skip writing.
-  #'
-  #' @param file_path A character string specifying the full path to the file to create.
-  #' @param content A character vector (or single string) containing the content to write to the file.
-  #' @param overwrite A logical value. If `TRUE`, an existing file will be overwritten.
-  #'   If `FALSE` and the file exists, the function will skip writing and issue a message.
-  #' @return Invisible `NULL`. Called for its side effects (file creation/writing and messages).
+
+  ## Create or Overwrite a File with Specified Content
+  ##
+  ## This helper function writes content to a file. It checks for the file's
+  ## existence and respects the `overwrite` flag. If `overwrite` is `FALSE` and
+  ## the file exists, it will skip writing.
+  ##
+  ## @param file_path A character string specifying the full path to the file to create.
+  ## @param content A character vector (or single string) containing the content to write to the file.
+  ## @param overwrite A logical value. If `TRUE`, an existing file will be overwritten.
+  ##   If `FALSE` and the file exists, the function will skip writing and issue a message.
+  ## @return Invisible `NULL`. Called for its side effects (file creation/writing and messages).
   create_file_with_content <- function(file_path, content, overwrite) {
     # Determine if the file already exists before attempting to write.
     file_exists_before_write <- file.exists(file_path)
-    
+
     if (!file_exists_before_write || overwrite) {
       # Write the content to the file.
       # writeLines is suitable for text content, preserving line breaks.
       writeLines(content, file_path)
-      
+
       # Provide a message based on whether the file was newly created or overwritten.
       if (file_exists_before_write && overwrite) {
         message("  -> Overwrote existing file: '", file_path, "'")
@@ -208,29 +209,29 @@ project_setup <- function(
     }
     invisible(NULL) # Return invisible NULL as this function is for side effects
   }
-  
-  #' Copy Files or Folders to a Destination Folder
-  #'
-  #' This helper function copies a set of source items (files or folders) to a
-  #' specified destination folder. It first ensures the destination folder exists.
-  #' It handles cases where source items are missing and respects the `overwrite`
-  #' flag for existing destination items.
-  #'
-  #' @param source_paths A character vector of full paths to the source files or
-  #'   folders to be copied.
-  #' @param dest_folder A character string specifying the path to the destination folder.
-  #' @param overwrite A logical value. If `TRUE`, existing files/folders in the
-  #'   destination with the same name will be overwritten. If `FALSE`, they will
-  #'   not be copied.
-  #' @return Invisible `NULL`. Called for its side effects (item copying and messages).
+
+  ## Copy Files or Folders to a Destination Folder
+  ##
+  ## This helper function copies a set of source items (files or folders) to a
+  ## specified destination folder. It first ensures the destination folder exists.
+  ## It handles cases where source items are missing and respects the `overwrite`
+  ## flag for existing destination items.
+  ##
+  ## @param source_paths A character vector of full paths to the source files or
+  ##   folders to be copied.
+  ## @param dest_folder A character string specifying the path to the destination folder.
+  ## @param overwrite A logical value. If `TRUE`, existing files/folders in the
+  ##   destination with the same name will be overwritten. If `FALSE`, they will
+  ##   not be copied.
+  ## @return Invisible `NULL`. Called for its side effects (item copying and messages).
   copy_items <- function(source_paths, dest_folder, overwrite) {
     # Ensure the destination folder exists before attempting to copy items.
     create_folder(dest_folder)
-    
+
     # Separate existing source items from missing ones for clear feedback.
     existing_sources <- source_paths[file.exists(source_paths)]
     missing_sources <- source_paths[!file.exists(source_paths)]
-    
+
     # Warn about any source items that could not be found.
     if (length(missing_sources) > 0) {
       warning(
@@ -238,22 +239,22 @@ project_setup <- function(
         paste(sQuote(missing_sources), collapse = ", ")
       )
     }
-    
+
     if (length(existing_sources) > 0) {
       # Initialize a logical vector to track success for each item.
       success_status <- logical(length(existing_sources))
-      
+
       # Loop through each source item to handle files and directories appropriately.
       for (i in seq_along(existing_sources)) {
         src <- existing_sources[i] # Current source path
-        
+
         if (dir.exists(src)) {
           # --- Handle Directories ---
           # When copying a directory, 'to' should be the *parent* directory
           # where the source directory (e.g., '_extensions') will be placed.
           # The result will be 'dest_folder/_extensions'.
           dest_path_for_dir <- file.path(dest_folder, basename(src))
-          
+
           # If the target directory already exists and overwrite is FALSE, skip.
           if (dir.exists(dest_path_for_dir) && !overwrite) {
             message("  -> Directory already exists (skipping, overwrite = FALSE): '", dest_path_for_dir, "'")
@@ -266,7 +267,7 @@ project_setup <- function(
             message("  -> Overwriting existing directory: '", dest_path_for_dir, "' (removing old content)")
             unlink(dest_path_for_dir, recursive = TRUE, force = TRUE)
           }
-          
+
           # Perform the copy for the directory.
           success_status[i] <- file.copy(
             from = src,
@@ -275,19 +276,19 @@ project_setup <- function(
             overwrite = overwrite # Applies to files *within* the copied directory
           )
           message("  -> Copied directory: '", src, "' to '", dest_path_for_dir, "'")
-          
+
         } else if (file.exists(src)) {
           # --- Handle Files ---
           # When copying a file, 'to' should be the full path including the new filename.
           dest_path_for_file <- file.path(dest_folder, basename(src))
-          
+
           # If the target file already exists and overwrite is FALSE, skip.
           if (file.exists(dest_path_for_file) && !overwrite) {
             message("  -> File already exists (skipping, overwrite = FALSE): '", dest_path_for_file, "'")
             success_status[i] <- TRUE
             next
           }
-          
+
           # Perform the copy for the file.
           success_status[i] <- file.copy(
             from = src,
@@ -296,7 +297,7 @@ project_setup <- function(
             recursive = FALSE # Not needed for files, but harmless to explicitly state
           )
           message("  -> Copied file: '", src, "' to '", dest_path_for_file, "'")
-          
+
         } else {
           # This case should ideally not be reached due to the 'existing_sources' filter,
           # but it's here for robustness.
@@ -304,7 +305,7 @@ project_setup <- function(
           success_status[i] <- FALSE
         }
       }
-      
+
       # Provide feedback on the copy operation's overall success.
       if (all(success_status)) {
         message("  -> All specified items copied successfully to '", dest_folder, "'")
@@ -322,7 +323,7 @@ project_setup <- function(
     }
     invisible(NULL) # Return invisible NULL as this function is for side effects
   }
-  
+
 
 
   ### --------------------------------------------------------------------------
@@ -1101,16 +1102,16 @@ Thumbs.db
   # Manuscript files
   if (manuscript) {
     message("\nCreating manuscript files...")
-    
+
     message("\nCopying Quarto extensions (Wordcount & Titlepage)")
     copy_items(
-      source_paths = paste0(old_wd, "/_extensions"),
+      source_paths = system.file("_extensions", package = "project.setup"),
       dest_folder = getwd(),
       overwrite = overwrite
     )
-    
+
     copy_items(
-      source_paths = paste0(old_wd, "/images"),
+      source_paths = system.file("images", package = "project.setup"),
       dest_folder = getwd(),
       overwrite = overwrite
     )
@@ -1148,20 +1149,20 @@ Thumbs.db
 
   }
 
-  
+
   # Presentation files
   if (presentation) {
     if (uma_style) {
       message("\nCreating UMA style presentation qmd...")
       content_tmp <- quarto_presentation_content_uma
-      
+
       # presentation qmd
       create_file_with_content(
         file_path = "presentation.qmd",
         content = content_tmp,
         overwrite = overwrite
       )
-      
+
       # theme.scss
       create_file_with_content(
         file_path = "theme.scss",
@@ -1169,11 +1170,11 @@ Thumbs.db
         overwrite = overwrite
       )
     }
-    
+
     if (!(uma_style)) {
       message("\nCreating presentation qmd...")
       content_tmp <- quarto_presentation_content_default
-      
+
       # presentation qmd
       create_file_with_content(
         file_path = "presentation.qmd",
@@ -1182,20 +1183,20 @@ Thumbs.db
       )
     }
   }
-  
+
 
   # .gitignore file
   if (gitignore) {
     message("\nCreating .gitignore file...")
-  
+
     create_file_with_content(
       file_path = ".gitignore",
       content = gitignore_content,
       overwrite = overwrite
     )
   }
-  
-  
+
+
   # code qmd notebookd
   if (code_files) {
     message("\nCreating .qmd code notebooks...")

@@ -8,31 +8,30 @@
 
 project_setup <- function(
     # Name to give to the overall project
-    project_name = "",
-    path = ".",
-    # MANUSCRIPT SETUP OPTIONS
-    manuscript = TRUE, # possibility of disabling manuscript qmd creation
-    author = NULL, # Name of author
-    institution = NULL, # add institution if wanted
-    mail = NULL, # add mail
-    student_id = NULL, # add student id
-    title = NULL, # Working title
-    subtitle = NULL, # Working Subtitle
-    references = TRUE, # create empty bibtex file
-    title_page = FALSE, # have dedicated title page
-    logo = FALSE, # have logo displayed on manuscript
-    stat_decl = FALSE, # add statutory declaration for examination term paper
-    # PRESENTATION SETUP OPTIONS
-    presentation = TRUE, # create presentation qmd
-    uma_style = TRUE, # uni MA style for presentation qmd
-    title_image_path = "C:/R/logistics/project_setup/images/uma_palace.png",
-    logo_path = "C:/R/logistics/project_setup/images/uma_ss.png",
-    # Other logistics
-    code_files = TRUE, # create code documentation qmd files
-    data_folders = TRUE, # create data folders
-    gitignore = TRUE, # create gitignore file
-    overwrite = TRUE # overwrite existing folders and files
-    ) {
+  project_name = "",
+  path = ".",
+  # MANUSCRIPT SETUP OPTIONS
+  manuscript = TRUE, # possibility of disabling manuscript qmd creation
+  author = NULL, # Name of author
+  institution = NULL, # add institution if wanted
+  mail = NULL, # add mail
+  student_id = NULL, # add student id
+  title = NULL, # Working title
+  subtitle = NULL, # Working Subtitle
+  title_page = FALSE, # have dedicated title page
+  logo = FALSE, # have logo displayed on manuscript
+  stat_decl = FALSE, # add statutory declaration for examination term paper
+  # PRESENTATION SETUP OPTIONS
+  presentation = TRUE, # create presentation qmd
+  uma_style = TRUE, # uni MA style for presentation qmd
+  title_image_path = "C:/R/logistics/project_setup/images/uma_palace.png",
+  logo_path = "C:/R/logistics/project_setup/images/uma_ss.png",
+  # Other logistics
+  code_files = TRUE, # create code documentation qmd files
+  data_folders = TRUE, # create data folders
+  gitignore = TRUE, # create gitignore file
+  overwrite = TRUE # overwrite existing folders and files
+) {
   
   
   
@@ -101,6 +100,11 @@ project_setup <- function(
   
   # First, create a vector of the optional details
   details_list <- c()
+  
+  # Check and convert student_id to character if necessary
+  if (!is.null(student_id) && !is.character(student_id)) {
+    student_id <- as.character(student_id)
+  }
   
   # Add each detail to the list only if it's not a placeholder
   if (!is.null(institution) && institution != "Your Institution") {
@@ -254,7 +258,7 @@ subtitle: |
   ", subtitle, "
 abstract: |
   You can add an abstract here.
-author: ", author_with_details, "
+author: \"", author_with_details, "\"", "
 thanks: |
    You can add acknowledgements here. Wordcount: {{< words-body >}}.
 date: last-modified
@@ -382,16 +386,16 @@ quarto_manuscript_content_default_statutory_decl <- paste0(
   quarto_manuscript_content_titlepage <- paste0(
 "---
 title: |
-  A Title
+  ", title, "
 subtitle: |
-  A Subtitle
+  ", subtitle, "
 abstract: |
   You can add an abstract here.
 author: 
   - name: ", author_with_id, "
-    email: test@mail.com
+    email: ", mail, "
     affiliations:
-      - name: University of Mannheim
+      - name: ", institution, "
         department: School of Social Sciences
 thanks: |
    You can add acknowledgements here. Wordcount: {{< words-body >}}.
@@ -473,6 +477,205 @@ quarto_manuscript_content_titlepage_statutory_decl <- paste0(
 )
 
 
+
+# PDF Manuscript with Title Page -----------------------------------------------
+
+quarto_manuscript_content_titlepage_logo <- paste0(
+  "---
+title: |
+  ", title, "
+subtitle: |
+  ", subtitle, "
+abstract: |
+  You can add an abstract here.
+author: 
+  - name: ", author_with_id, "
+    email: ", mail, "
+    affiliations:
+      - name: ", institution, "
+        department: School of Social Sciences
+thanks: |
+   You can add acknowledgements here. Wordcount: {{< words-body >}}.
+date: last-modified
+date-format: MMMM D, YYYY
+format: 
+  titlepage-pdf:
+    citeproc: false
+    filters:
+      - at: pre-quarto
+        path: _extensions/andrewheiss/wordcount/citeproc.lua
+      - at: pre-quarto
+        path: _extensions/andrewheiss/wordcount/wordcount.lua
+    titlepage: academic
+    titlepage-logo: images/uma_ss.png
+    toc: false
+    include-in-header:
+      text: |
+        \\usepackage{setspace}
+        \\setlength{\\parindent}{15pt}
+execute:
+  echo: false
+  warning: false
+  eval: true
+  include: true
+  cache: true
+bibliography: references.bib
+biblio-style: apsr
+link-citations: true
+number-sections: true
+papersize: a4
+fontsize: 12pt
+linestretch: 2
+geometry:
+  - top = 2cm
+  - bottom = 2cm
+  - left = 2.5cm
+  - right = 2.5cm
+  - footskip = 20pt
+---
+    
+## Introduction {#sec-introduction} 
+    
+{{< lipsum 2 >}}
+
+## Theory {#sec-theory}
+
+{{< lipsum 2 >}}
+
+## Research Design {#sec-design}
+
+{{< lipsum 2 >}}
+
+## Empirical Analysis {#sec-analysis}
+
+{{< lipsum 2 >}}
+
+## Conclusion {#sec-conclusion}
+
+{{< lipsum 2 >}}
+    
+\\singlespacing
+
+## References
+
+::: {#refs}
+:::
+
+## Appendix {.appendix}
+    
+"
+)
+
+
+quarto_manuscript_content_titlepage_logo_statutory_decl <- paste0(
+  quarto_manuscript_content_titlepage_logo,
+  stat_decl_content
+)
+
+
+# References Bibtex File -------------------------------------------------------
+
+ref_bib <- paste0(
+  "@article{, \n",
+  "  author = {},\n",
+  "  title = {},\n",
+  "  journal = {},\n",
+  "  year = {},\n",
+  "  volume = {},\n",
+  "  number = {},\n",
+  "  pages = {},\n",
+  "  doi = {}\n",
+  "}"
+)
+
+# Code QMDs --------------------------------------------------------------------
+
+quarto_code_notebook <- paste0(
+  "---
+title: |
+  Code Notebook
+subtitle: |
+  ", title, ": ", subtitle, "
+author: 
+  - name: ", author, "
+    email: ", mail, "
+    affiliations:
+      - name: ", institution, "
+        department: School of Social Sciences
+date: last-modified
+date-format: MMMM D, YYYY
+format: 
+  html:
+    toc: true
+    code-fold: true
+    code-tools: true
+execute:
+  echo: true
+  warning: true
+  eval: true
+  message: true
+---
+  
+# Setup 
+
+```{r}
+#| label: setup
+
+# To track render duration
+start_time <- Sys.time()
+
+# set width of console output
+options(width = 80)
+
+
+# Install and load required packages
+p_required <- c(
+  \"tidyverse\",
+  \"here\", 
+  \"sessioninfo\" 
+)
+packages <- rownames(installed.packages())
+p_to_install <- p_required[!(p_required %in% packages)]
+if (length(p_to_install) > 0) {
+  install.packages(p_to_install)
+}
+sapply(p_required, require, character.only = TRUE)
+rm(p_required, p_to_install, packages)
+```
+
+# Code 1
+
+```{r}
+#| label: code-1
+
+# start your code here
+
+```
+
+
+# Session Info
+
+```{r}
+#| label: session-info
+
+session_info()
+```
+
+
+# Render Time
+
+```{r}
+#| label: render-time
+
+end_time <- Sys.time()
+
+rendering_time <- end_time - start_time
+
+message(paste(\"Document rendered in:\", round(as.numeric(rendering_time, units = \"secs\"), 2), \"seconds.\n\"))
+```
+
+
+  ")
 
 
   ### --------------------------------------------------------------------------

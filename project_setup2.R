@@ -266,8 +266,6 @@ format:
       text: |
         \\usepackage{setspace}
         \\setlength{\\parindent}{15pt}
-        \\usepackage{multicol}
-        \\usepackage{caption}
 execute:
   echo: false
   warning: false
@@ -413,8 +411,6 @@ format:
       text: |
         \\usepackage{setspace}
         \\setlength{\\parindent}{15pt}
-        \\usepackage{multicol}
-        \\usepackage{caption}
 execute:
   echo: false
   warning: false

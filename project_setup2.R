@@ -141,20 +141,16 @@ project_setup <- function(
   # Check for the existence of template images if presentation is TRUE
   # and the UMA style is requested.
   if (presentation && uma_style) {
-    # Create a named list of the image paths to check
-    image_paths_to_check <- list(
-      title_image = title_image_path,
-      logo = logo_path
-    )
+    
     
     # Check if each file exists
-    missing_images <- image_paths_to_check[!file.exists(image_paths_to_check)]
+    logo_file_check <- !file.exists(logo_path)
+    image_file_check <- !file.exists(title_image_path)
     
-    if (length(missing_images) > 0) {
+    if (logo_file_check || image_file_check) {
       # If any images are missing, throw a warning and disable the UMA style
       warning(
-        "The following UMA style image template files could not be found: ",
-        paste(names(missing_images), collapse = ", "),
+        " Logo or Title Image File not Found:",
         ".\nPresentation will still be created, but without the UMA style templates."
       )
       # Set uma_style to FALSE to prevent the function from trying to copy them later
@@ -478,7 +474,7 @@ quarto_manuscript_content_titlepage_statutory_decl <- paste0(
 
 
 
-# PDF Manuscript with Title Page -----------------------------------------------
+# PDF Manuscript with Title Page and Logo --------------------------------------
 
 quarto_manuscript_content_titlepage_logo <- paste0(
   "---
@@ -507,7 +503,7 @@ format:
       - at: pre-quarto
         path: _extensions/andrewheiss/wordcount/wordcount.lua
     titlepage: academic
-    titlepage-logo: images/uma_ss.png
+    titlepage-logo: ", logo_path, "
     toc: false
     include-in-header:
       text: |
@@ -588,7 +584,7 @@ ref_bib <- paste0(
   "}"
 )
 
-# Code QMDs --------------------------------------------------------------------
+# Code QMD ---------------------------------------------------------------------
 
 quarto_code_notebook <- paste0(
   "---
@@ -676,6 +672,285 @@ message(paste(\"Document rendered in:\", round(as.numeric(rendering_time, units 
 
 
   ")
+
+
+
+# Presentation QMD -------------------------------------------------------------
+
+quarto_presentation_content_default <- paste("--- 
+author: ", author, " 
+title: ", title, "
+subtitle: ", subtitle, "
+date: last-modified
+date-format: MMMM D, YYYY
+bibliography: references.bib
+biblio-style: apsr
+format:
+  revealjs:
+    embed-resources: true
+    slideNumber: true
+    footer: ", author, "  – {{< meta date >}} – ", title, "
+preview-links: true
+---
+
+
+
+# Introduction
+
+## Motivation
+
+- Bullet point 1
+- more details @ [Quarto Revealjs Documentation](https://quarto.org/docs/presentations/revealjs/)
+
+------------------------------------------------------------------------
+
+## Relevance
+
+------------------------------------------------------------------------
+
+## Research Question
+
+# Theory
+
+## Prior Research
+
+------------------------------------------------------------------------
+
+## Theoretical Framework
+
+------------------------------------------------------------------------
+
+## Argument
+
+# Research Design
+
+------------------------------------------------------------------------
+
+## Data
+
+------------------------------------------------------------------------
+
+## Methods
+
+# Results
+
+------------------------------------------------------------------------
+
+## Results I
+
+------------------------------------------------------------------------
+
+## Results II
+
+# Conclusion
+
+------------------------------------------------------------------------
+
+## Summary
+
+------------------------------------------------------------------------
+
+## Implications
+
+# Thank you for your attention!
+
+------------------------------------------------------------------------
+
+## References
+")
+
+
+quarto_presentation_content_uma <- paste("--- 
+author:", author, " 
+date: last-modified
+date-format: MMMM D, YYYY
+bibliography: references.bib
+biblio-style: apsr
+format:
+  revealjs:
+    embed-resources: true
+    theme: theme.scss
+    slideNumber: true
+    footer: Tristan Muno – {{< meta date >}} – Course
+    logo: ", logo_path, "
+editor: visual
+preview-links: true
+---
+
+##", title, "
+
+###", subtitle, "
+
+![](", title_image_path, "){width=\"100%\"} 
+{{< meta author >}}<br>
+{{< meta date >}}
+
+# Introduction
+
+## Motivation
+
+- Bullet point 1
+- more details @ [Quarto Revealjs Documentation](https://quarto.org/docs/presentations/revealjs/)
+
+------------------------------------------------------------------------
+
+## Relevance
+
+------------------------------------------------------------------------
+
+## Research Question
+
+# Theory
+
+## Prior Research
+
+------------------------------------------------------------------------
+
+## Theoretical Framework
+
+------------------------------------------------------------------------
+
+## Argument
+
+# Research Design
+
+------------------------------------------------------------------------
+
+## Data
+
+------------------------------------------------------------------------
+
+## Methods
+
+# Results
+
+------------------------------------------------------------------------
+
+## Results I
+
+------------------------------------------------------------------------
+
+## Results II
+
+# Conclusion
+
+------------------------------------------------------------------------
+
+## Summary
+
+------------------------------------------------------------------------
+
+## Implications
+
+# Thank you for your attention!
+
+------------------------------------------------------------------------
+
+## References
+")
+
+
+scss_content <- "/*-- scss:defaults --*/
+$caption-background: #003056;
+$main-background: white;
+$main-text: #003056;
+$footnote-background: #003056;
+$presentation-heading-color: #003056;
+
+/*-- scss:rules --*/
+/*.reveal .slides > section > h1, .reveal .slides > section > section > h2 {
+    background-color: $caption-background;
+    color: $main-background;
+} */
+
+#title-slide {
+  .title {
+    color: #003056; /* This is the fill color for the inside of the text */
+  /*  -webkit-text-stroke: 1px #DE7E50; /* This adds the border color */
+  /*  text-stroke: 1px #DE7E50; /* For non-WebKit browsers */
+  }
+
+  .subtitle {
+    color: #003056;
+  /*  -webkit-text-stroke: 1px #DE7E50;
+  /*  text-stroke: 1px #DE7E50; */
+  }
+
+  .quarto-title-author {
+    color: #003056;
+  /*  -webkit-text-stroke: 1px #DE7E50;
+    text-stroke: 1px #DE7E50; */
+  }
+
+  .quarto-title-date {
+    color: #003056;
+   /* -webkit-text-stroke: 1px #DE7E50;
+    text-stroke: 1px #DE7E50; */
+  }
+}
+
+.reveal .slides > section > p, .reveal .slides > section > section > p {
+    color: $main-text;
+}
+
+.reveal .slide-number {
+    background-color: $footnote-background;
+    color: $main-text;
+    bottom: 14px !important;
+    right: 50px !important;
+    top: unset !important;
+}
+
+.reveal .footer {
+    background-color: $main-background;
+    color: $main-text;
+}
+
+/* Custom color for author and date */
+.quarto-author, .quarto-date {
+  color: #003056; /* Change to your desired color */
+}
+
+/* Custom link and list styles */
+.reveal a {
+  color: #DE7E50;
+}
+.reveal li {
+  color: #003056;
+}
+
+/* Adjust the logo size */
+.reveal .slide-logo {
+        max-height: 4em !important;
+        top: 0;
+        right: 12px
+      }
+"
+
+
+# Gitignore file ---------------------------------------------------------------
+
+gitignore_content <- "
+# IDE and R-specific files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Quarto
+.quarto
+_extensions/
+_freeze/
+_publish.yml
+**/.ipynb_checkpoints/
+
+# Cache folders and files
+*cache*
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+"
 
 
   ### --------------------------------------------------------------------------

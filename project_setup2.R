@@ -1,58 +1,71 @@
-#' -----------------------------------------------------------------------------
-#' PROJECT SETUP FUNCTION ------------------------------------------------------
-#' -----------------------------------------------------------------------------
-
-
-
-
-
+#' Project Setup
+#'
+#' This function sets up a new R project with a standardized folder structure and
+#' initial files, including options for manuscripts, presentations, and other
+#' project logistics.
+#'
+#' @param project_name A character string specifying the name for the overall project.
+#' @param target_path A character string specifying the path where the project should be created.
+#' @param manuscript A logical value. If `TRUE`, it creates a Quarto (`.qmd`) file for a manuscript.
+#' @param author A character string for the author's name.
+#' @param institution A character string for the author's institution.
+#' @param mail A character string for the author's email address.
+#' @param student_id A character string for the author's student ID.
+#' @param title A character string for the working title of the manuscript or presentation.
+#' @param subtitle A character string for the working subtitle.
+#' @param title_page A logical value. If `TRUE`, it creates a dedicated title page for the manuscript.
+#' @param logo A logical value. If `TRUE`, a logo will be displayed on the manuscript.
+#' @param stat_decl A logical value. If `TRUE`, a statutory declaration is added for examination term papers.
+#' @param presentation A logical value. If `TRUE`, a Quarto (`.qmd`) file for a presentation is created.
+#' @param uma_style A logical value. If `TRUE`, the presentation Quarto file will use a specific University of Mannheim style.
+#' @param title_image_path A character string specifying the source path to the title image for the presentation.
+#' @param logo_path A character string specifying the source path to the logo for the manuscript or presentation.
+#' @param code_files A logical value. If `TRUE`, it creates Quarto files for code documentation.
+#' @param data_folders A logical value. If `TRUE`, it creates standard data folders (`raw`, `processed`, etc.).
+#' @param gitignore A logical value. If `TRUE`, a `.gitignore` file is created.
+#' @param overwrite A logical value. If `TRUE`, it will overwrite existing folders and files with the same name.
+#'
+#' @export
 project_setup <- function(
-    # Name to give to the overall project
-  project_name = "",
-  path = ".",
-  # MANUSCRIPT SETUP OPTIONS
-  manuscript = TRUE, # possibility of disabling manuscript qmd creation
-  author = NULL, # Name of author
-  institution = NULL, # add institution if wanted
-  mail = NULL, # add mail
-  student_id = NULL, # add student id
-  title = NULL, # Working title
-  subtitle = NULL, # Working Subtitle
-  title_page = FALSE, # have dedicated title page
-  logo = FALSE, # have logo displayed on manuscript
-  stat_decl = FALSE, # add statutory declaration for examination term paper
-  # PRESENTATION SETUP OPTIONS
-  presentation = TRUE, # create presentation qmd
-  uma_style = TRUE, # uni MA style for presentation qmd
-  title_image_path = "C:/R/logistics/project_setup/images/uma_palace.png",
-  logo_path = "C:/R/logistics/project_setup/images/uma_ss.png",
-  # Other logistics
-  code_files = TRUE, # create code documentation qmd files
-  data_folders = TRUE, # create data folders
-  gitignore = TRUE, # create gitignore file
-  overwrite = TRUE # overwrite existing folders and files
+    project_name = "",
+    target_path = ".",
+    # MANUSCRIPT SETUP OPTIONS
+    manuscript = TRUE,
+    author = NULL,
+    institution = NULL,
+    mail = NULL,
+    student_id = NULL,
+    title = NULL,
+    subtitle = NULL,
+    title_page = FALSE,
+    logo = FALSE,
+    stat_decl = FALSE,
+    # PRESENTATION SETUP OPTIONS
+    presentation = TRUE,
+    uma_style = TRUE,
+    title_image_path = "./images/uma_palace.png",
+    logo_path = "./images/uma_ss.png",
+    # Other logistics
+    code_files = TRUE,
+    data_folders = TRUE,
+    gitignore = TRUE,
+    overwrite = TRUE
 ) {
+
+  # --------------------------------------------------------------------------
+  # 1. Input Validation and Argument Checks
+  # --------------------------------------------------------------------------
   
+  # Ensure a project name is a non-empty character string.
+  stopifnot(
+    "You must provide a 'project_name'." = project_name != "",
+    "The 'project_name' must be a character string." = is.character(project_name)
+  )
   
+  # Construct the full project path.
+  full_project_path <- file.path(target_path, project_name)
   
-  ### --------------------------------------------------------------------------
-  ### 1. Input Validation and Argument Checks
-  ### --------------------------------------------------------------------------
-  
-  # Ensure a project name is provided
-  if (project_name == "") {
-    stop("You must provide a 'project_name'.")
-  }
-  
-  # Ensure project name is character
-  if (!is.character(project_name)) {
-    stop("No character value provided to 'project_name'.")
-  }
-  
-  # Construct the full project path
-  full_project_path <- file.path(path, project_name)
-  
-  # Update the validation check to use the full path
+  # Check if the project directory already exists and if overwriting is disallowed.
   if (dir.exists(full_project_path) && !overwrite) {
     stop(
       "Project directory '", full_project_path, "' already exists. ",
@@ -60,174 +73,251 @@ project_setup <- function(
     )
   }
   
-  # Handle NULL values for metadata by providing sensible defaults
+  # Handle NULL values for metadata by providing sensible defaults.
+  # Get the system username for 'author'. We check multiple environment variables
+  # for cross-platform compatibility.
   if (is.null(author)) {
-    # A robust, cross-platform way to get the username
-    author <- Sys.getenv("LOGNAME")
+    author <- Sys.getenv("LOGNAME", unset = "")
     if (author == "") {
-      author <- Sys.getenv("USER")
+      author <- Sys.getenv("USER", unset = "")
     }
     if (author == "") {
-      author <- Sys.getenv("USERNAME")
-    }
-    # Final fallback if none of the above are set
-    if (author == "") {
-      author <- "Your Name Here"
+      author <- Sys.getenv("USERNAME", unset = "Your Name Here")
     }
   }
   
-  if (is.null(institution)) {
-    institution <- "Your Institution"
-  }
-  if (is.null(mail)) {
-    mail <- "your.email@your.institution.com"
-  }
-  if (is.null(student_id)) {
-    student_id <- "1234567"
-  }
-  
-  if (is.null(title)) {
-    title <- "Untitled Project"
-  }
-  
-  if (is.null(subtitle)) {
-    subtitle <- "A great project"
-  }
+  if (is.null(institution)) institution <- "Your Institution"
+  if (is.null(mail)) mail <- "your.email@your.institution.com"
+  if (is.null(student_id)) student_id <- "1234567"
+  if (is.null(title)) title <- "Untitled Project"
+  if (is.null(subtitle)) subtitle <- "A great project"
   
   # --- Construct the 'author_with_details' string for the YAML header ---
-  # The goal is to build a string like:
-  # "Firstname Lastname^[Institution; Mail: email; student ID: id]"
+  # The goal is to build a string like: "Firstname Lastname^[Institution; Mail: email; student ID: id]"
   
-  # First, create a vector of the optional details
-  details_list <- c()
-  
-  # Check and convert student_id to character if necessary
+  # Check and convert student_id to character if necessary.
   if (!is.null(student_id) && !is.character(student_id)) {
     student_id <- as.character(student_id)
   }
   
-  # Add each detail to the list only if it's not a placeholder
-  if (!is.null(institution) && institution != "Your Institution") {
-    details_list <- c(details_list, institution)
-  }
-  if (!is.null(mail) && mail != "your.email@your.institution.com") {
-    details_list <- c(details_list, paste0("Mail: ", mail))
-  }
-  if (!is.null(student_id) && student_id != "1234567") {
-    details_list <- c(details_list, paste0("Student ID: ", student_id))
-  }
+  # Build a vector of details strings only for non-default values.
+  details <- c(
+    if (!is.null(institution) && institution != "Your Institution") institution,
+    if (!is.null(mail) && mail != "your.email@your.institution.com") paste0("Mail: ", mail),
+    if (!is.null(student_id) && student_id != "1234567") paste0("Student ID: ", student_id)
+  )
   
-  # Combine the details into a single string, separated by semicolons
-  if (length(details_list) > 0) {
-    details_string <- paste(details_list, collapse = "; ")
-    author_with_details <- paste0(author, "^[", details_string, "]")
+  # Combine the details into a single string, separated by semicolons.
+  if (length(details) > 0) {
+    author_with_details <- paste0(author, "^[", paste(details, collapse = "; "), "]")
   } else {
-    # If no details were provided, just use the author's name
+    # If no non-default details were provided, just use the author's name.
     author_with_details <- author
   }
   
-  
   # --- Construct the 'author_with_id' variable ---
-  # The goal is to build a string like:
-  # "Firstname Lastname (Student ID)"
+  # The goal is to build a string like: "Firstname Lastname (Student ID)"
   if (!is.null(student_id) && student_id != "1234567") {
     author_with_id <- paste0(author, " (", student_id, ")")
   } else {
-    # If no student ID was provided, just use the author's name
+    # If no non-default student ID was provided, just use the author's name.
     author_with_id <- author
   }
-  
   
   # Check for the existence of template images if presentation is TRUE
   # and the UMA style is requested.
   if (presentation && uma_style) {
+    # Check if each file exists.
+    logo_file_exists <- file.exists(logo_path)
+    image_file_exists <- file.exists(title_image_path)
     
-    
-    # Check if each file exists
-    logo_file_check <- !file.exists(logo_path)
-    image_file_check <- !file.exists(title_image_path)
-    
-    if (logo_file_check || image_file_check) {
-      # If any images are missing, throw a warning and disable the UMA style
+    if (!logo_file_exists || !image_file_exists) {
+      # If any images are missing, throw a warning and disable the UMA style.
       warning(
-        " Logo or Title Image File not Found:",
-        ".\nPresentation will still be created, but without the UMA style templates."
+        "Logo or Title Image File not found for UMA style. ",
+        "Presentation will still be created, but without the UMA style templates."
       )
-      # Set uma_style to FALSE to prevent the function from trying to copy them later
+      # Set uma_style to FALSE to prevent the function from trying to copy them later.
       uma_style <- FALSE
     }
   }
-  ### --------------------------------------------------------------------------
-  ### 3. Helper Functions (Encapsulated)
-  ### --------------------------------------------------------------------------
-
-  # Function to create folders if they don't exist
-  # dir.create() with recursive = TRUE
-  # handles existing folders without issue.
+  
+  # --------------------------------------------------------------------------
+  # 2. Helper Functions (Encapsulated)
+  # --------------------------------------------------------------------------
+  
+  #' Create a Folder if It Does Not Exist
+  #'
+  #' This helper function ensures a specified folder path exists. If the folder
+  #' does not exist, it creates it recursively. It provides informative messages
+  #' about the action taken.
+  #'
+  #' @param folder_path A character string specifying the path of the folder to create.
+  #' @return Invisible `NULL`. Called for its side effects (folder creation and messages).
   create_folder <- function(folder_path) {
     if (!dir.exists(folder_path)) {
+      # Create the directory recursively, meaning any necessary parent directories
+      # will also be created.
       dir.create(folder_path, recursive = TRUE)
-      message("  -> Created folder: '", folder_path, "'")
+      message("  -> Created folder: '", folder_path, "' (recursively)")
     } else {
-      message("  -> Folder already exists: '", folder_path, "'")
+      # Inform the user if the folder already exists, no action needed.
+      message("  -> Folder already exists: '", folder_path, "' (skipping creation)")
     }
+    invisible(NULL) # Return invisible NULL as this function is for side effects
   }
-
-  # Function to create files with specified content, respecting the `overwrite` flag.
+  
+  #' Create or Overwrite a File with Specified Content
+  #'
+  #' This helper function writes content to a file. It checks for the file's
+  #' existence and respects the `overwrite` flag. If `overwrite` is `FALSE` and
+  #' the file exists, it will skip writing.
+  #'
+  #' @param file_path A character string specifying the full path to the file to create.
+  #' @param content A character vector (or single string) containing the content to write to the file.
+  #' @param overwrite A logical value. If `TRUE`, an existing file will be overwritten.
+  #'   If `FALSE` and the file exists, the function will skip writing and issue a message.
+  #' @return Invisible `NULL`. Called for its side effects (file creation/writing and messages).
   create_file_with_content <- function(file_path, content, overwrite) {
-    # Check if the file exists and whether we are allowed to overwrite
-    if (!file.exists(file_path) || overwrite) {
+    # Determine if the file already exists before attempting to write.
+    file_exists_before_write <- file.exists(file_path)
+    
+    if (!file_exists_before_write || overwrite) {
+      # Write the content to the file.
+      # writeLines is suitable for text content, preserving line breaks.
       writeLines(content, file_path)
-      if (file.exists(file_path) && overwrite) {
+      
+      # Provide a message based on whether the file was newly created or overwritten.
+      if (file_exists_before_write && overwrite) {
         message("  -> Overwrote existing file: '", file_path, "'")
       } else {
         message("  -> Created file: '", file_path, "'")
       }
     } else {
-      message("  -> File already exists (skipping): '", file_path, "'")
+      # Inform the user if the file exists and overwrite is FALSE.
+      message("  -> File already exists (skipping, overwrite = FALSE): '", file_path, "'")
     }
+    invisible(NULL) # Return invisible NULL as this function is for side effects
   }
-
-  # Function to copy images, respecting the `overwrite` flag.
-  copy_files <- function(source_paths, dest_folder, overwrite) {
-    create_folder(dest_folder) # Ensure destination exists
-
-    # Filter out missing source files before attempting to copy
+  
+  #' Copy Files or Folders to a Destination Folder
+  #'
+  #' This helper function copies a set of source items (files or folders) to a
+  #' specified destination folder. It first ensures the destination folder exists.
+  #' It handles cases where source items are missing and respects the `overwrite`
+  #' flag for existing destination items.
+  #'
+  #' @param source_paths A character vector of full paths to the source files or
+  #'   folders to be copied.
+  #' @param dest_folder A character string specifying the path to the destination folder.
+  #' @param overwrite A logical value. If `TRUE`, existing files/folders in the
+  #'   destination with the same name will be overwritten. If `FALSE`, they will
+  #'   not be copied.
+  #' @return Invisible `NULL`. Called for its side effects (item copying and messages).
+  copy_items <- function(source_paths, dest_folder, overwrite) {
+    # Ensure the destination folder exists before attempting to copy items.
+    create_folder(dest_folder)
+    
+    # Separate existing source items from missing ones for clear feedback.
     existing_sources <- source_paths[file.exists(source_paths)]
     missing_sources <- source_paths[!file.exists(source_paths)]
-
-    # Provide feedback on missing files
+    
+    # Warn about any source items that could not be found.
     if (length(missing_sources) > 0) {
       warning(
-        "Some source files are missing and will not be copied: ",
-        paste(missing_sources, collapse = ", ")
+        "Some source items are missing and will not be copied: ",
+        paste(sQuote(missing_sources), collapse = ", ")
       )
     }
-
+    
     if (length(existing_sources) > 0) {
-      # Attempt to copy the images that do exist
-      success <- sapply(names(existing_sources), function(name) {
-        file.copy(
-          from = existing_sources[[name]],
-          to = file.path(dest_folder, basename(existing_sources[[name]])),
-          overwrite = overwrite
-        )
-      })
-
-      if (all(success)) {
-        message("  -> All files copied successfully!")
+      # Initialize a logical vector to track success for each item.
+      success_status <- logical(length(existing_sources))
+      
+      # Loop through each source item to handle files and directories appropriately.
+      for (i in seq_along(existing_sources)) {
+        src <- existing_sources[i] # Current source path
+        
+        if (dir.exists(src)) {
+          # --- Handle Directories ---
+          # When copying a directory, 'to' should be the *parent* directory
+          # where the source directory (e.g., '_extensions') will be placed.
+          # The result will be 'dest_folder/_extensions'.
+          dest_path_for_dir <- file.path(dest_folder, basename(src))
+          
+          # If the target directory already exists and overwrite is FALSE, skip.
+          if (dir.exists(dest_path_for_dir) && !overwrite) {
+            message("  -> Directory already exists (skipping, overwrite = FALSE): '", dest_path_for_dir, "'")
+            success_status[i] <- TRUE # Consider it a success if skipped due to no-overwrite
+            next # Move to the next item
+          } else if (dir.exists(dest_path_for_dir) && overwrite) {
+            # If overwriting an existing directory, it's safer to remove it first.
+            # This ensures a clean copy and prevents unexpected merging behavior
+            # from file.copy's recursive overwrite.
+            message("  -> Overwriting existing directory: '", dest_path_for_dir, "' (removing old content)")
+            unlink(dest_path_for_dir, recursive = TRUE, force = TRUE)
+          }
+          
+          # Perform the copy for the directory.
+          success_status[i] <- file.copy(
+            from = src,
+            to = dest_folder, # Copy 'src' (the directory) INTO 'dest_folder'
+            recursive = TRUE, # Essential for copying directory contents
+            overwrite = overwrite # Applies to files *within* the copied directory
+          )
+          message("  -> Copied directory: '", src, "' to '", dest_path_for_dir, "'")
+          
+        } else if (file.exists(src)) {
+          # --- Handle Files ---
+          # When copying a file, 'to' should be the full path including the new filename.
+          dest_path_for_file <- file.path(dest_folder, basename(src))
+          
+          # If the target file already exists and overwrite is FALSE, skip.
+          if (file.exists(dest_path_for_file) && !overwrite) {
+            message("  -> File already exists (skipping, overwrite = FALSE): '", dest_path_for_file, "'")
+            success_status[i] <- TRUE
+            next
+          }
+          
+          # Perform the copy for the file.
+          success_status[i] <- file.copy(
+            from = src,
+            to = dest_path_for_file,
+            overwrite = overwrite,
+            recursive = FALSE # Not needed for files, but harmless to explicitly state
+          )
+          message("  -> Copied file: '", src, "' to '", dest_path_for_file, "'")
+          
+        } else {
+          # This case should ideally not be reached due to the 'existing_sources' filter,
+          # but it's here for robustness.
+          message("  -> Warning: Source item not found during copy attempt: '", src, "'")
+          success_status[i] <- FALSE
+        }
+      }
+      
+      # Provide feedback on the copy operation's overall success.
+      if (all(success_status)) {
+        message("  -> All specified items copied successfully to '", dest_folder, "'")
       } else {
-        # This case would indicate a permissions issue, not a missing file issue
-        warning(" -> Some files could not be copied due to an unexpected error.")
+        # Identify which items failed to copy (e.g., due to permissions).
+        failed_copies <- existing_sources[!success_status]
+        warning(
+          "Some items could not be copied to '", dest_folder, "': ",
+          paste(sQuote(failed_copies), collapse = ", "),
+          ". This might be due to permissions or other unexpected errors."
+        )
       }
     } else {
-      message("  -> No files found to copy.")
+      message("  -> No existing source items found to copy.")
     }
+    invisible(NULL) # Return invisible NULL as this function is for side effects
   }
+  
 
 
   ### --------------------------------------------------------------------------
-  ### 4. Project Directory Creation and Scoping
+  ### 3. Project Directory Creation and Scoping
   ### --------------------------------------------------------------------------
 
   message("\nStarting project setup for '", project_name, "'.")
@@ -245,8 +335,8 @@ project_setup <- function(
   ### --------------------------------------------------------------------------
 
   # Default PDF Manuscript (No Title Page) -------------------------------------
-  
-quarto_manuscript_content_default <- paste0(
+
+  quarto_manuscript_content_default <- paste0(
     "---
 title: |
   ", title, "
@@ -259,7 +349,7 @@ thanks: |
    You can add acknowledgements here. Wordcount: {{< words-body >}}.
 date: last-modified
 date-format: MMMM D, YYYY
-format: 
+format:
   wordcount-pdf:
     toc: false
     include-in-header:
@@ -286,9 +376,9 @@ geometry:
   - right = 2.5cm
   - footskip = 20pt
 ---
-    
-## Introduction {#sec-introduction} 
-    
+
+## Introduction {#sec-introduction}
+
 {{< lipsum 2 >}}
 
 ## Theory {#sec-theory}
@@ -306,7 +396,7 @@ geometry:
 ## Conclusion {#sec-conclusion}
 
 {{< lipsum 2 >}}
-    
+
 \\singlespacing
 
 ## References
@@ -315,15 +405,15 @@ geometry:
 :::
 
 ## Appendix {.appendix}
-    
+
 "
   )
 
-  
-# If statutory declaration is TRUE  
-  
-stat_decl_content <- "
-\\newpage  
+
+  # If statutory declaration is TRUE
+
+  stat_decl_content <- "
+\\newpage
 
 ## Eidesstattliche Erklärung -- Statutory Declaration {.unlisted .unnumbered}
 
@@ -368,26 +458,26 @@ the paper cannot be evaluated and may be graded “failed” (“nicht
   Signature
 }
 ```
-"   
-  
-  
-quarto_manuscript_content_default_statutory_decl <- paste0(
-  quarto_manuscript_content_default,
-  stat_decl_content
-  )
-  
+"
 
-# PDF Manuscript with Title Page -----------------------------------------------
- 
+
+  quarto_manuscript_content_default_statutory_decl <- paste0(
+    quarto_manuscript_content_default,
+    stat_decl_content
+  )
+
+
+  # PDF Manuscript with Title Page -----------------------------------------------
+
   quarto_manuscript_content_titlepage <- paste0(
-"---
+    "---
 title: |
   ", title, "
 subtitle: |
   ", subtitle, "
 abstract: |
   You can add an abstract here.
-author: 
+author:
   - name: ", author_with_id, "
     email: ", mail, "
     affiliations:
@@ -397,7 +487,7 @@ thanks: |
    You can add acknowledgements here. Wordcount: {{< words-body >}}.
 date: last-modified
 date-format: MMMM D, YYYY
-format: 
+format:
   titlepage-pdf:
     citeproc: false
     filters:
@@ -431,9 +521,9 @@ geometry:
   - right = 2.5cm
   - footskip = 20pt
 ---
-    
-## Introduction {#sec-introduction} 
-    
+
+## Introduction {#sec-introduction}
+
 {{< lipsum 2 >}}
 
 ## Theory {#sec-theory}
@@ -451,7 +541,7 @@ geometry:
 ## Conclusion {#sec-conclusion}
 
 {{< lipsum 2 >}}
-    
+
 \\singlespacing
 
 ## References
@@ -460,31 +550,31 @@ geometry:
 :::
 
 ## Appendix {.appendix}
-    
+
 "
   )
 
 
 
 
-quarto_manuscript_content_titlepage_statutory_decl <- paste0(
-  quarto_manuscript_content_titlepage,
-  stat_decl_content
-)
+  quarto_manuscript_content_titlepage_statutory_decl <- paste0(
+    quarto_manuscript_content_titlepage,
+    stat_decl_content
+  )
 
 
 
-# PDF Manuscript with Title Page and Logo --------------------------------------
+  # PDF Manuscript with Title Page and Logo --------------------------------------
 
-quarto_manuscript_content_titlepage_logo <- paste0(
-  "---
+  quarto_manuscript_content_titlepage_logo <- paste0(
+    "---
 title: |
   ", title, "
 subtitle: |
   ", subtitle, "
 abstract: |
   You can add an abstract here.
-author: 
+author:
   - name: ", author_with_id, "
     email: ", mail, "
     affiliations:
@@ -494,7 +584,7 @@ thanks: |
    You can add acknowledgements here. Wordcount: {{< words-body >}}.
 date: last-modified
 date-format: MMMM D, YYYY
-format: 
+format:
   titlepage-pdf:
     citeproc: false
     filters:
@@ -529,9 +619,9 @@ geometry:
   - right = 2.5cm
   - footskip = 20pt
 ---
-    
-## Introduction {#sec-introduction} 
-    
+
+## Introduction {#sec-introduction}
+
 {{< lipsum 2 >}}
 
 ## Theory {#sec-theory}
@@ -549,7 +639,7 @@ geometry:
 ## Conclusion {#sec-conclusion}
 
 {{< lipsum 2 >}}
-    
+
 \\singlespacing
 
 ## References
@@ -558,41 +648,58 @@ geometry:
 :::
 
 ## Appendix {.appendix}
-    
+
 "
-)
+  )
 
 
-quarto_manuscript_content_titlepage_logo_statutory_decl <- paste0(
-  quarto_manuscript_content_titlepage_logo,
-  stat_decl_content
-)
+  quarto_manuscript_content_titlepage_logo_statutory_decl <- paste0(
+    quarto_manuscript_content_titlepage_logo,
+    stat_decl_content
+  )
 
 
-# References Bibtex File -------------------------------------------------------
+  # References Bibtex File -------------------------------------------------------
 
-ref_bib <- paste0(
-  "@article{, \n",
-  "  author = {},\n",
-  "  title = {},\n",
-  "  journal = {},\n",
-  "  year = {},\n",
-  "  volume = {},\n",
-  "  number = {},\n",
-  "  pages = {},\n",
-  "  doi = {}\n",
-  "}"
-)
+  ref_bib <- paste0(
+    "@article{, \n",
+    "  author = {},\n",
+    "  title = {},\n",
+    "  journal = {},\n",
+    "  year = {},\n",
+    "  volume = {},\n",
+    "  number = {},\n",
+    "  pages = {},\n",
+    "  doi = {}\n",
+    "}\n\n",
+    "@book{, \n",
+    "  author = {},\n",
+    "  title = {},\n",
+    "  publisher = {},\n",
+    "  address = {},\n",
+    "  year = {},\n",
+    "}\n\n",
+    "@incollection{, \n",
+    "  author = {},\n",
+    "  title = {},\n",
+    "  booktitle = {},\n",
+    "  editor = {},\n",
+    "  publisher = {},\n",
+    "  address = {},\n",
+    "  year = {},\n",
+    "  pages = {},\n",
+    "}\n"
+  )
 
-# Code QMD ---------------------------------------------------------------------
+  # Code QMD ---------------------------------------------------------------------
 
-quarto_code_notebook <- paste0(
-  "---
+  quarto_code_notebook <- paste0(
+    "---
 title: |
   Code Notebook
 subtitle: |
   ", title, ": ", subtitle, "
-author: 
+author:
   - name: ", author, "
     email: ", mail, "
     affiliations:
@@ -600,7 +707,7 @@ author:
         department: School of Social Sciences
 date: last-modified
 date-format: MMMM D, YYYY
-format: 
+format:
   html:
     toc: true
     code-fold: true
@@ -611,8 +718,8 @@ execute:
   eval: true
   message: true
 ---
-  
-# Setup 
+
+# Setup
 
 ```{r}
 #| label: setup
@@ -627,8 +734,8 @@ options(width = 80)
 # Install and load required packages
 p_required <- c(
   \"tidyverse\",
-  \"here\", 
-  \"sessioninfo\" 
+  \"here\",
+  \"sessioninfo\"
 )
 packages <- rownames(installed.packages())
 p_to_install <- p_required[!(p_required %in% packages)]
@@ -675,10 +782,10 @@ message(paste(\"Document rendered in:\", round(as.numeric(rendering_time, units 
 
 
 
-# Presentation QMD -------------------------------------------------------------
+  # Presentation QMD -------------------------------------------------------------
 
-quarto_presentation_content_default <- paste("--- 
-author: ", author, " 
+  quarto_presentation_content_default <- paste("---
+author: ", author, "
 title: ", title, "
 subtitle: ", subtitle, "
 date: last-modified
@@ -760,8 +867,8 @@ preview-links: true
 ")
 
 
-quarto_presentation_content_uma <- paste("--- 
-author:", author, " 
+  quarto_presentation_content_uma <- paste("---
+author:", author, "
 date: last-modified
 date-format: MMMM D, YYYY
 bibliography: references.bib
@@ -781,7 +888,7 @@ preview-links: true
 
 ###", subtitle, "
 
-![](", title_image_path, "){width=\"100%\"} 
+![](", title_image_path, "){width=\"100%\"}
 {{< meta author >}}<br>
 {{< meta date >}}
 
@@ -850,7 +957,7 @@ preview-links: true
 ")
 
 
-scss_content <- "/*-- scss:defaults --*/
+  scss_content <- "/*-- scss:defaults --*/
 $caption-background: #003056;
 $main-background: white;
 $main-text: #003056;
@@ -928,9 +1035,9 @@ $presentation-heading-color: #003056;
 "
 
 
-# Gitignore file ---------------------------------------------------------------
+  # Gitignore file ---------------------------------------------------------------
 
-gitignore_content <- "
+  gitignore_content <- "
 # IDE and R-specific files
 .Rproj.user
 .Rhistory
@@ -960,56 +1067,123 @@ Thumbs.db
   # --- Create Core Folders ---
   if (data_folders) {
     message("\nCreating core folders...")
-    core_folders <- c("data", "code")
-    lapply(core_folders, create_folder)
+    core_folders <- c(
+      "code",
+      "data/01_raw",
+      "data/02_processed",
+      "data/03_final"
+    )
+    invisible(lapply(core_folders, create_folder))
   }
+
+
+  # --- Create References File ---
+  message("\nCreating bibliography file...")
+  create_file_with_content(
+    file_path = "references.bib",
+    content = ref_bib,
+    overwrite = overwrite
+  )
+
+
 
   # --- Conditional File Creation ---
 
   # Manuscript files
   if (manuscript) {
     message("\nCreating manuscript files...")
-    create_file_with_content("manuscript/manuscript.qmd", quarto_manuscript_content, overwrite)
+    
+    message("\nCopying Quarto extensions (Wordcount & Titlepage)")
+    copy_items(
+      source_paths = paste0(old_wd, "/_extensions"),
+      dest_folder = getwd(),
+      overwrite = overwrite
+    )
+    
+    copy_items(
+      source_paths = paste0(old_wd, "/images"),
+      dest_folder = getwd(),
+      overwrite = overwrite
+    )
+
+
+    if (title_page && logo && stat_decl) {
+      content_tmp <- quarto_manuscript_content_titlepage_logo_statutory_decl
+    }
+
+    if (title_page && logo && !(stat_decl)) {
+      content_tmp <- quarto_manuscript_content_titlepage_logo
+    }
+
+    if (title_page && stat_decl && !(logo)) {
+      content_tmp <- quarto_manuscript_content_titlepage_logo
+    }
+
+    if (title_page && !(stat_decl) && !(logo)) {
+      content_tmp <- quarto_manuscript_content_titlepage
+    }
+
+    if ((!title_page) && stat_decl) {
+      content_tmp <- quarto_manuscript_content_default_statutory_decl
+    }
+
+    if ((!title_page) && !(stat_decl)) {
+      content_tmp <- quarto_manuscript_content_default
+    }
+
+    create_file_with_content(
+      file_path = "manuscript.qmd",
+      content = content_tmp,
+      overwrite = overwrite
+    )
+
   }
 
+  
   # Presentation files
   if (presentation) {
-    message("\nCreating presentation files...")
-    # Create presentation subfolders first
-    create_folder("presentation/images")
-
-    create_file_with_content("presentation/presentation.qmd", quarto_presentation_content, overwrite)
-
-    # Conditionally create UMA style theme and copy images
     if (uma_style) {
-      message("\nApplying UMA style...")
-      create_file_with_content("presentation/theme.scss", scss_content, overwrite)
-
-      image_source_paths <- list(
-        title_image = title_image_path,
-        logo = logo_path
+      message("\nCreating UMA style presentation qmd...")
+      content_tmp <- quarto_presentation_content_uma
+      
+      # presentation qmd
+      create_file_with_content(
+        file_path = "presentation.qmd",
+        content = content_tmp,
+        overwrite = overwrite
       )
-      copy_images(image_source_paths, "presentation/images", overwrite)
+      
+      # theme.scss
+      create_file_with_content(
+        file_path = "theme.scss",
+        content = scss_content,
+        overwrite = overwrite
+      )
+    }
+    
+    if (!(uma_style)) {
+      message("\nCreating presentation qmd...")
+      content_tmp <- quarto_presentation_content_default
+      
+      # presentation qmd
+      create_file_with_content(
+        file_path = "presentation.qmd",
+        content = content_tmp,
+        overwrite = overwrite
+      )
     }
   }
-
-  # Code documentation files
-  if (code_files) {
-    message("\nCreating code documentation files...")
-    # ... your calls to create_file_with_content() for the code files go here ...
-  }
-
-  # Bibliography files
-  if (references) {
-    message("\nCreating bibliography files...")
-    # ... your call to create_file_with_content() for the .bib files goes here ...
-  }
+  
 
   # .gitignore file
   if (gitignore) {
     message("\nCreating .gitignore file...")
-    gitignore_content <- c(...) # your gitignore string
-    create_file_with_content(".gitignore", gitignore_content, overwrite)
+  
+    create_file_with_content(
+      file_path = ".gitignore",
+      content = gitignore_content,
+      overwrite = overwrite
+    )
   }
 
 

@@ -57,10 +57,19 @@ project_setup <- function(
   # --------------------------------------------------------------------------
   
   # Ensure a project name is a non-empty character string.
-  stopifnot(
-    "You must provide a 'project_name'." = project_name != "",
-    "The 'project_name' must be a character string." = is.character(project_name)
-  )
+    stopifnot(
+        "You must provide a 'project_name'." = project_name != "",
+        "The 'project_name' must be a character string." = is.character(project_name)
+    )
+
+    # Check for whitespace or special characters in project_name
+    if (grepl("[[:space:]]|[[:punct:]]", project_name)) {
+        warning(
+            "The 'project_name' contains whitespace or special characters. ",
+            "It is recommended to use a name without these for folder creation (e.g., 'my_project' or 'MyProject')."
+        )
+    }
+  
   
   # Construct the full project path.
   full_project_path <- file.path(target_path, project_name)
@@ -662,32 +671,32 @@ geometry:
   # References Bibtex File -------------------------------------------------------
 
   ref_bib <- paste0(
-    "@article{, \n",
-    "  author = {},\n",
-    "  title = {},\n",
-    "  journal = {},\n",
-    "  year = {},\n",
-    "  volume = {},\n",
-    "  number = {},\n",
-    "  pages = {},\n",
-    "  doi = {}\n",
+    "@article{article_key_here, \n",
+    "  author = {Lastname, Firstname and Lastname, Firstname}, \n",
+    "  title = {Title of the Article}, \n",
+    "  journal = {Journal Title}, \n",
+    "  year = {YYYY}, \n",
+    "  volume = {1}, \n",
+    "  number = {1}, \n",
+    "  pages = {1-10}, \n",
+    "  doi = {doi:10.1234/56789}\n",
     "}\n\n",
-    "@book{, \n",
-    "  author = {},\n",
-    "  title = {},\n",
-    "  publisher = {},\n",
-    "  address = {},\n",
-    "  year = {},\n",
+    "@book{book_key_here, \n",
+    "  author = {Lastname, Firstname}, \n",
+    "  title = {Title of the Book}, \n",
+    "  publisher = {Publisher Name}, \n",
+    "  address = {City, Country}, \n",
+    "  year = {YYYY}, \n",
     "}\n\n",
-    "@incollection{, \n",
-    "  author = {},\n",
-    "  title = {},\n",
-    "  booktitle = {},\n",
-    "  editor = {},\n",
-    "  publisher = {},\n",
-    "  address = {},\n",
-    "  year = {},\n",
-    "  pages = {},\n",
+    "@incollection{incollection_key_here, \n",
+    "  author = {Lastname, Firstname}, \n",
+    "  title = {Title of the Chapter}, \n",
+    "  booktitle = {Title of the Edited Book}, \n",
+    "  editor = {Lastname, Firstname}, \n",
+    "  publisher = {Publisher Name}, \n",
+    "  address = {City, Country}, \n",
+    "  year = {YYYY}, \n",
+    "  pages = {1-10}, \n",
     "}\n"
   )
 
@@ -1182,6 +1191,18 @@ Thumbs.db
     create_file_with_content(
       file_path = ".gitignore",
       content = gitignore_content,
+      overwrite = overwrite
+    )
+  }
+  
+  
+  # code qmd notebookd
+  if (code_files) {
+    message("\nCreating .qmd code notebooks...")
+
+    create_file_with_content(
+      file_path = "code/01_code.qmd",
+      content = quarto_code_notebook,
       overwrite = overwrite
     )
   }

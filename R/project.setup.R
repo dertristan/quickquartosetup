@@ -64,12 +64,13 @@ project_setup <- function(
   )
 
   # Check for whitespace or disallowed special characters in project_name
-  if (grepl("[[:space:]]|[!\"#$%&'()*+,/:;<=>?@[\\]^`{|}~\\-]", project_name)) {
+  if (grepl("[^A-Za-z0-9_.]", project_name)) {
     warning(
-      "The 'project_name' contains whitespace or disallowed special characters. ",
-      "It is recommended to use a name without these for folder creation (e.g., 'my_project' or 'MyProject')."
+      "The 'project_name' contains disallowed characters. ",
+      "It is recommended to use only letters, numbers, underscores (_), or dots (.) for folder names."
     )
   }
+
 
 
   # Construct the full project path.

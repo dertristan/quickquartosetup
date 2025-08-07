@@ -31,7 +31,7 @@ SOFTWARE.
 This package includes third-party Quarto extensions, which are licensed under their respective terms:
 
 - **Quarto Titlepages Extension**  
-  License: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)  
+  License: [Creative Commons 1.0 Universal (CC0 1.0)](https://creativecommons.org/licenses/by/1.0/)  
   Source: [https://github.com/quarto-ext/titlepages](https://github.com/quarto-ext/titlepages)
 
 - **Quarto Wordcount Extension by Andrew Heiss**  

@@ -1,6 +1,6 @@
 # project.setup
 
-### A package for quick research project setup
+### A package for quick research project setup with R and Quarto
 
 `project.setup` is an R package designed to streamline the creation of new research projects. It provides a single function, `project_setup()`, which automates the creation of a standardized folder structure and a suite of initial files based on common academic workflows. This helps users quickly start new projects with a consistent and organized framework, including templates for manuscripts, presentations, and code notebooks.
 

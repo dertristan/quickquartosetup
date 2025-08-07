@@ -4,15 +4,15 @@
 #' initial files, including options for manuscripts, presentations, and other
 #' project logistics.
 #'
-#' @param project_name A character string specifying the name for the overall project.
-#' @param target_path A character string specifying the path where the project should be created.
+#' @param project_name A character string specifying the name for the overall project. This value will be used to name the project directory.
+#' @param target_path A character string specifying the path where the project should be created. Defaults to current directory, but if wished another directory can be explicitly addressed through this argument.
 #' @param manuscript A logical value. If `TRUE`, it creates a Quarto (`.qmd`) file for a manuscript.
-#' @param author A character string for the author's name.
-#' @param institution A character string for the author's institution.
-#' @param mail A character string for the author's email address.
-#' @param student_id A character string for the author's student ID.
-#' @param title A character string for the working title of the manuscript or presentation.
-#' @param subtitle A character string for the working subtitle.
+#' @param author A character string for the author's name. Will be used across `manuscript.qmd`, `presentation.qmd` and `code.qmd` files.
+#' @param institution A character string for the author's institution. Will be used in `manuscript.qmd`.
+#' @param mail A character string for the author's email address. Will be used in `manuscript.qmd`.
+#' @param student_id A character string for the author's student ID. Will be used in `manuscript.qmd`.
+#' @param title A character string for the working title of the manuscript. Will be used in `presentation.qmd` and `code.qmd` too.
+#' @param subtitle A character string for the working subtitle. Will be used in `presentation.qmd` and `code.qmd` too.
 #' @param title_page A logical value. If `TRUE`, it creates a dedicated title page for the manuscript.
 #' @param logo A logical value. If `TRUE`, a logo will be displayed on the manuscript.
 #' @param stat_decl A logical value. If `TRUE`, a statutory declaration is added for examination term papers.

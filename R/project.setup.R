@@ -52,26 +52,24 @@ project_setup <- function(
     code_files = TRUE,
     data_folders = TRUE,
     gitignore = TRUE,
-    overwrite = TRUE
-) {
-
+    overwrite = TRUE) {
   # --------------------------------------------------------------------------
   # 1. Input Validation and Argument Checks
   # --------------------------------------------------------------------------
 
   # Ensure a project name is a non-empty character string.
-    stopifnot(
-        "You must provide a 'project_name'." = project_name != "",
-        "The 'project_name' must be a character string." = is.character(project_name)
-    )
+  stopifnot(
+    "You must provide a 'project_name'." = project_name != "",
+    "The 'project_name' must be a character string." = is.character(project_name)
+  )
 
-    # Check for whitespace or special characters in project_name
-    if (grepl("[[:space:]]|[[:punct:]]", project_name)) {
-        warning(
-            "The 'project_name' contains whitespace or special characters. ",
-            "It is recommended to use a name without these for folder creation (e.g., 'my_project' or 'MyProject')."
-        )
-    }
+  # Check for whitespace or disallowed special characters in project_name
+  if (grepl("[[:space:]]|[!\"#$%&'()*+,/:;<=>?@[\\]^`{|}~\\-]", project_name)) {
+    warning(
+      "The 'project_name' contains whitespace or disallowed special characters. ",
+      "It is recommended to use a name without these for folder creation (e.g., 'my_project' or 'MyProject')."
+    )
+  }
 
 
   # Construct the full project path.
@@ -139,11 +137,11 @@ project_setup <- function(
   # Check for the existence of template images if presentation is TRUE
   # and the UMA style is requested.
   if (presentation && uma_style) {
-    # Check if each file exists.
-    logo_file_exists <- file.exists(logo_path)
-    image_file_exists <- file.exists(title_image_path)
+    # Check if each source files can be found.
+    image_files_exists <- file.exists(system.file("images", package = "project.setup"))
 
-    if (!logo_file_exists || !image_file_exists) {
+
+    if (!image_files_exists) {
       # If any images are missing, throw a warning and disable the UMA style.
       warning(
         "Logo or Title Image File not found for UMA style. ",
@@ -279,7 +277,6 @@ project_setup <- function(
             overwrite = overwrite # Applies to files *within* the copied directory
           )
           message("  -> Copied directory: '", src, "' to '", dest_path_for_dir, "'")
-
         } else if (file.exists(src)) {
           # --- Handle Files ---
           # When copying a file, 'to' should be the full path including the new filename.
@@ -300,7 +297,6 @@ project_setup <- function(
             recursive = FALSE # Not needed for files, but harmless to explicitly state
           )
           message("  -> Copied file: '", src, "' to '", dest_path_for_file, "'")
-
         } else {
           # This case should ideally not be reached due to the 'existing_sources' filter,
           # but it's here for robustness.
@@ -791,7 +787,8 @@ message(paste(\"Document rendered in:\", round(as.numeric(rendering_time, units 
 ```
 
 
-  ")
+  "
+  )
 
 
 
@@ -809,7 +806,7 @@ format:
   revealjs:
     embed-resources: true
     slideNumber: true
-    footer: ", author, "  – {{< meta date >}} – ", title, "
+    footer: ", author, "  -- {{< meta date >}} -- ", title, "
 preview-links: true
 ---
 
@@ -891,7 +888,7 @@ format:
     embed-resources: true
     theme: theme.scss
     slideNumber: true
-    footer: Tristan Muno – {{< meta date >}} – Course
+    footer: Tristan Muno <U+2013> {{< meta date >}} <U+2013> Course
     logo: ", logo_path, "
 editor: visual
 preview-links: true
@@ -1149,7 +1146,6 @@ Thumbs.db
       content = content_tmp,
       overwrite = overwrite
     )
-
   }
 
 

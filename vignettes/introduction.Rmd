@@ -1,0 +1,38 @@
+---
+title: "Introduction to project_setup()"
+author: Tristan Muno
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{project_setup()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+This vignette gives an overview on how to use the `project_setup` function. First, install the package if not done already:
+
+```{r install}
+# install.packages("remotes")  # if not already installed
+remotes::install_github("dertristan/project.setup")
+```
+
+Next, load the package to the current session:
+
+```{r setup}
+library(project.setup)
+```
+
+The package consists of one major function: `project_setup()`. The only necessary argument without which the function does not work is the project name, which tells the function how to name the overall parent directory it is going to create.
+
+```{r}
+project_setup(project_name = "my_new_project")
+```
+

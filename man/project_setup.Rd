@@ -28,48 +28,47 @@ project_setup(
 )
 }
 \arguments{
-\item{project_name}{A character string specifying the name for the overall project.}
+\item{project_name}{A character string specifying the project name. This will be used to name the main project directory. Defaults to an empty string (\code{""}).}
 
-\item{target_path}{A character string specifying the path where the project should be created.}
+\item{target_path}{A character string specifying the path where the project should be created. You can specify a custom path; otherwise, the current working directory is used. Defaults to \code{"."}.}
 
-\item{manuscript}{A logical value. If \code{TRUE}, it creates a Quarto (\code{.qmd}) file for a manuscript.}
+\item{manuscript}{Logical. If \code{TRUE}, creates a Quarto manuscript file (\code{manuscript.qmd}). Defaults to \code{TRUE}.}
 
-\item{author}{A character string for the author's name.}
+\item{author}{A character string specifying the author's name. Included in manuscript, presentation, and code files. Defaults to \code{NULL}.}
 
-\item{institution}{A character string for the author's institution.}
+\item{institution}{A character string specifying the author's institution. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
 
-\item{mail}{A character string for the author's email address.}
+\item{mail}{A character string specifying the author's email address. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
 
-\item{student_id}{A character string for the author's student ID.}
+\item{student_id}{A character string specifying the student's ID. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
 
-\item{title}{A character string for the working title of the manuscript or presentation.}
+\item{title}{A character string specifying the working title of the project. Used in manuscript, presentation, and code files. Defaults to \code{NULL}.}
 
-\item{subtitle}{A character string for the working subtitle.}
+\item{subtitle}{A character string specifying the subtitle of the project. Used in presentation and code files. Defaults to \code{NULL}.}
 
-\item{title_page}{A logical value. If \code{TRUE}, it creates a dedicated title page for the manuscript.}
+\item{title_page}{Logical. If \code{TRUE}, generates a dedicated title page using the Quarto \code{titlepages} extension. Defaults to \code{FALSE}.}
 
-\item{logo}{A logical value. If \code{TRUE}, a logo will be displayed on the manuscript.}
+\item{logo}{Logical. If \code{TRUE}, includes a logo on the manuscript. Only applies if \code{title_page = TRUE}. Defaults to \code{FALSE}.}
 
-\item{stat_decl}{A logical value. If \code{TRUE}, a statutory declaration is added for examination term papers.}
+\item{stat_decl}{Logical. If \code{TRUE}, adds a statutory declaration (e.g., for exam papers). Defaults to \code{FALSE}.}
 
-\item{presentation}{A logical value. If \code{TRUE}, a Quarto (\code{.qmd}) file for a presentation is created.}
+\item{presentation}{Logical. If \code{TRUE}, creates a Quarto Reveal.js presentation (\code{presentation.qmd}). Defaults to \code{TRUE}.}
 
-\item{uma_style}{A logical value. If \code{TRUE}, the presentation Quarto file will use a specific University of Mannheim style.}
+\item{uma_style}{Logical. If \code{TRUE}, applies a custom University of Mannheim style, including SCSS theme, logo, and title image. Defaults to \code{TRUE}.}
 
-\item{title_image_path}{A character string specifying the source path to the title image for the presentation.}
+\item{title_image_path}{A character string specifying the path to the presentation's title image. Defaults to \code{"./images/uma_palace.png"}.}
 
-\item{logo_path}{A character string specifying the source path to the logo for the manuscript or presentation.}
+\item{logo_path}{A character string specifying the path to the logo used in manuscript or presentation. Defaults to \code{"./images/uma_ss.png"}.}
 
-\item{code_files}{A logical value. If \code{TRUE}, it creates Quarto files for code documentation.}
+\item{code_files}{Logical. If \code{TRUE}, creates a code notebook file (\verb{01_code.qmd}) for documentation. Defaults to \code{TRUE}.}
 
-\item{data_folders}{A logical value. If \code{TRUE}, it creates standard data folders (\code{raw}, \code{processed}, etc.).}
+\item{data_folders}{Logical. If \code{TRUE}, creates standard data subfolders (\code{raw}, \code{processed}, \code{final}). Defaults to \code{TRUE}.}
 
-\item{gitignore}{A logical value. If \code{TRUE}, a \code{.gitignore} file is created.}
+\item{gitignore}{Logical. If \code{TRUE}, generates a \code{.gitignore} file. Defaults to \code{TRUE}.}
 
-\item{overwrite}{A logical value. If \code{TRUE}, it will overwrite existing folders and files with the same name.}
+\item{overwrite}{Logical. If \code{TRUE}, allows overwriting existing files or folders with the same names. Defaults to \code{TRUE}.}
 }
 \description{
-This function sets up a new R project with a standardized folder structure and
-initial files, including options for manuscripts, presentations, and other
-project logistics.
+Initializes a new R project with a standardized folder structure and optional files
+for manuscripts, presentations, code, and data management.
 }

@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Tristan", "Muno", , "trismuno@gmail.com", role = c("aut", "cre"))
 Description: This package provides the `project_setup()` helper function that allows for quick creation of new research projects. Based on my personal experiences and preferences, it creates a pre-specified folder structure for data, code and images as well as several files, including a pdf `manuscript.qmd` source file, a revealjs `presentation.qmd` source file, an html `code.qmd` notebook, a `references.bib` bibliography template and a `.gitignore` file for version control.
-License: GPL (>= 3)
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

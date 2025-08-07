@@ -1,31 +1,34 @@
 #' Project Setup
 #'
-#' This function sets up a new R project with a standardized folder structure and
-#' initial files, including options for manuscripts, presentations, and other
-#' project logistics.
+#' Initializes a new R project with a standardized folder structure and optional files
+#' for manuscripts, presentations, code, and data management.
 #'
-#' @param project_name A character string specifying the name for the overall project. This value will be used to name the project directory.
-#' @param target_path A character string specifying the path where the project should be created. Defaults to current directory, but if wished another directory can be explicitly addressed through this argument.
-#' @param manuscript A logical value. If `TRUE`, it creates a Quarto (`.qmd`) file for a manuscript.
-#' @param author A character string for the author's name. Will be used across `manuscript.qmd`, `presentation.qmd` and `code.qmd` files.
-#' @param institution A character string for the author's institution. Will be used in `manuscript.qmd`.
-#' @param mail A character string for the author's email address. Will be used in `manuscript.qmd`.
-#' @param student_id A character string for the author's student ID. Will be used in `manuscript.qmd`.
-#' @param title A character string for the working title of the manuscript. Will be used in `presentation.qmd` and `code.qmd` too.
-#' @param subtitle A character string for the working subtitle. Will be used in `presentation.qmd` and `code.qmd` too.
-#' @param title_page A logical value. If `TRUE`, it creates a dedicated title page for the manuscript.
-#' @param logo A logical value. If `TRUE`, a logo will be displayed on the manuscript.
-#' @param stat_decl A logical value. If `TRUE`, a statutory declaration is added for examination term papers.
-#' @param presentation A logical value. If `TRUE`, a Quarto (`.qmd`) file for a presentation is created.
-#' @param uma_style A logical value. If `TRUE`, the presentation Quarto file will use a specific University of Mannheim style.
-#' @param title_image_path A character string specifying the source path to the title image for the presentation.
-#' @param logo_path A character string specifying the source path to the logo for the manuscript or presentation.
-#' @param code_files A logical value. If `TRUE`, it creates Quarto files for code documentation.
-#' @param data_folders A logical value. If `TRUE`, it creates standard data folders (`raw`, `processed`, etc.).
-#' @param gitignore A logical value. If `TRUE`, a `.gitignore` file is created.
-#' @param overwrite A logical value. If `TRUE`, it will overwrite existing folders and files with the same name.
+#' @param project_name A character string specifying the project name. This will be used to name the main project directory. Defaults to an empty string (`""`).
+#' @param target_path A character string specifying the path where the project should be created. You can specify a custom path; otherwise, the current working directory is used. Defaults to `"."`.
+#'
+#' @param manuscript Logical. If `TRUE`, creates a Quarto manuscript file (`manuscript.qmd`). Defaults to `TRUE`.
+#' @param author A character string specifying the author's name. Included in manuscript, presentation, and code files. Defaults to `NULL`.
+#' @param institution A character string specifying the author's institution. Included in `manuscript.qmd`. Defaults to `NULL`.
+#' @param mail A character string specifying the author's email address. Included in `manuscript.qmd`. Defaults to `NULL`.
+#' @param student_id A character string specifying the student's ID. Included in `manuscript.qmd`. Defaults to `NULL`.
+#' @param title A character string specifying the working title of the project. Used in manuscript, presentation, and code files. Defaults to `NULL`.
+#' @param subtitle A character string specifying the subtitle of the project. Used in presentation and code files. Defaults to `NULL`.
+#' @param title_page Logical. If `TRUE`, generates a dedicated title page using the Quarto `titlepages` extension. Defaults to `FALSE`.
+#' @param logo Logical. If `TRUE`, includes a logo on the manuscript. Only applies if `title_page = TRUE`. Defaults to `FALSE`.
+#' @param stat_decl Logical. If `TRUE`, adds a statutory declaration (e.g., for exam papers). Defaults to `FALSE`.
+#'
+#' @param presentation Logical. If `TRUE`, creates a Quarto Reveal.js presentation (`presentation.qmd`). Defaults to `TRUE`.
+#' @param uma_style Logical. If `TRUE`, applies a custom University of Mannheim style, including SCSS theme, logo, and title image. Defaults to `TRUE`.
+#' @param title_image_path A character string specifying the path to the presentation's title image. Defaults to `"./images/uma_palace.png"`.
+#' @param logo_path A character string specifying the path to the logo used in manuscript or presentation. Defaults to `"./images/uma_ss.png"`.
+#'
+#' @param code_files Logical. If `TRUE`, creates a code notebook file (`01_code.qmd`) for documentation. Defaults to `TRUE`.
+#' @param data_folders Logical. If `TRUE`, creates standard data subfolders (`raw`, `processed`, `final`). Defaults to `TRUE`.
+#' @param gitignore Logical. If `TRUE`, generates a `.gitignore` file. Defaults to `TRUE`.
+#' @param overwrite Logical. If `TRUE`, allows overwriting existing files or folders with the same names. Defaults to `TRUE`.
 #'
 #' @export
+
 project_setup <- function(
     project_name = "",
     target_path = ".",

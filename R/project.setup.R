@@ -889,7 +889,7 @@ format:
     embed-resources: true
     theme: theme.scss
     slideNumber: true
-    footer: Tristan Muno <U+2013> {{< meta date >}} <U+2013> Course
+    footer: ", author, "  -- {{< meta date >}} -- ", title, "
     logo: ", logo_path, "
 editor: visual
 preview-links: true

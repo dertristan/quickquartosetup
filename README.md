@@ -1,19 +1,19 @@
 # project.setup
 
-### A package for quick research project setup with R and Quarto
+### A lightweight R package for streamlined research project setup with Quarto
 
-`project.setup` is an R package designed to streamline the creation of new research projects. It provides a single function, `project_setup()`, which automates the creation of a standardized folder structure and a suite of initial files based on common academic workflows. This helps users quickly start new projects with a consistent and organized framework, including templates for manuscripts, presentations, and code notebooks.
+**`project.setup`** is an R package that simplifies the initialization of new research projects. It offers a single, user-friendly function—`project_setup()`—to automatically generate a standardized folder structure along with essential starter files tailored to academic workflows.
 
-The package is based on the personal experiences and preferences of the author, creating a reproducible setup that supports best practices in academic research.
+Whether you're writing a manuscript, preparing a presentation, or organizing code and data, `project.setup` helps you get started quickly with a clean, consistent, and reproducible setup. The structure is based on best practices in academic research and informed by the author’s own experience in managing projects efficiently.
 
 ---
 
 ## Installation
 
-You can install the development version of the package from GitHub:
+Install the development version of the package directly from GitHub:
 
-```r
-# install.packages("remotes")
+```
+# install.packages("remotes")  # if not already installed
 remotes::install_github("dertristan/project.setup")
 ```
 
@@ -21,15 +21,15 @@ remotes::install_github("dertristan/project.setup")
 
 ## Usage
 
-The primary function is `project_setup()`. Calling it with a `project_name` will create a new directory with a default structure and files.
+The main function is `project_setup()`. Calling it with a `project_name` creates a new directory with a pre-defined folder structure and optional template files.
 
-```r
+```
 library(project.setup)
 
-# Create a new project with default settings
+# Create a new project with the default structure
 project_setup(project_name = "my_new_project")
 
-# Create a project with a specific manuscript title and presentation
+# Customize the project with manuscript and presentation templates
 project_setup(
   project_name = "my_awesome_project",
   title = "The Impact of X on Y",
@@ -37,6 +37,6 @@ project_setup(
   presentation = TRUE
 )
 
-# You can also use other options to customize the setup
-# (e.g., disable certain file types, add a statutory declaration, etc.)
+# Additional options let you customize the setup further—
+# for example, adding a title page, including a logo, or skipping certain components.
 ```

@@ -1,4 +1,4 @@
-Package: QuickQuartoSetup
+Package: quickquartosetup
 Title: A lightweight R package for streamlined research project setup with Quarto
 Version: 0.0.0.9000
 Authors@R: 

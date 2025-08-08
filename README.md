@@ -111,7 +111,7 @@ See the vignette for an introduction and the documentation for all available arg
 
 ## 🛠 Development Status (August 2025)
 
-`quickquartosetup` is under active development. Planned improvements include:
+`quickquartosetup` is under development. Planned improvements include:
 
 - [ ] Fix installation warnings
 - [ ] Improve “Folder already exists” handling for Quarto extensions

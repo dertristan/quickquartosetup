@@ -1,11 +1,11 @@
-# project.setup
+# quickquartosetup
 
 ### A lightweight R package for fast, consistent research project setup with Quarto
 
-**`project.setup`** makes starting a new research project painless.  
+**`quickquartosetup`** makes starting a new research project painless.  
 With a single call to `project_setup()`, you can instantly create a clean, reproducible folder structure, complete with essential starter files designed for academic workflows.
 
-Whether you’re writing a manuscript, preparing a presentation, or organizing your analysis pipeline, `project.setup` helps you work faster and stay organized. The structure follows best practices in academic research and is based on the author’s experience managing multiple projects efficiently.
+Whether you’re writing a manuscript, preparing a presentation, or organizing your analysis pipeline, `quickquartosetup` helps you work faster and stay organized. The structure follows best practices in academic research and is based on the author’s experience managing multiple projects efficiently.
 
 ---
 
@@ -26,7 +26,7 @@ Install the development version from GitHub:
 
 ```r
 # install.packages("remotes")  # if not already installed
-remotes::install_github("dertristan/project.setup")
+remotes::install_github("dertristan/quickquartosetup")
 ```
 
 ---
@@ -38,7 +38,7 @@ The core function is `project_setup()`.
 **Basic example**:
 
 ```r
-library(project.setup)
+library(quickquartosetup)
 
 # Create a new project with default settings
 project_setup(project_name = "my_new_project")
@@ -104,14 +104,14 @@ See the vignette for an introduction and the documentation for all available arg
 
 ## 🙌 Credits
 
-- [Quarto wordcount extension](https://github.com/andrewheiss/quarto-wordcount) – by [Andrew Heiss](https://github.com/andrewheiss)  
-- [Quarto titlepages extension](https://github.com/nmfs-opensci/quarto_titlepages) – by [NMFS Open Science](https://github.com/nmfs-opensci)
+- [Quarto wordcount extension](https://github.com/andrewheiss/quarto-wordcount) -- developed by [Andrew Heiss](https://github.com/andrewheiss)  
+- [Quarto titlepages extension](https://github.com/nmfs-opensci/quarto_titlepages) -- developed by [NMFS Open Science](https://github.com/nmfs-opensci)
 
 ---
 
-## 🛠 Development Status
+## 🛠 Development Status (August 2025)
 
-`project.setup` is under active development. Planned improvements include:
+`quickquartosetup` is under active development. Planned improvements include:
 
 - [ ] Fix installation warnings
 - [ ] Improve “Folder already exists” handling for Quarto extensions
@@ -123,6 +123,7 @@ See the vignette for an introduction and the documentation for all available arg
 - [ ] Include example citations in default manuscript
 - [ ] Provide Quarto learning examples (citations, quotes, figures, tables, equations, etc.)
 - [ ] Improve `theme.scss`
+- [ ] Find better package name
 
 ---
 
@@ -136,4 +137,4 @@ MIT License © Tristan Muno
 
 If you use this package in your research:
 
-> Muno, Tristan (2025). *project.setup: A lightweight R package for streamlined research project setup with Quarto*. https://github.com/dertristan/project.setup
+> Muno, Tristan (2025). *quickquartosetup: A lightweight R package for streamlined research project setup with Quarto*. https://github.com/dertristan/quickquartosetup

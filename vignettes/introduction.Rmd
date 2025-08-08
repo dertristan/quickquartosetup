@@ -4,7 +4,7 @@ author: Tristan Muno
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{project_setup()}
+  %\VignetteIndexEntry{Introduction to project_setup()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,19 +18,19 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-This vignette provides an introduction to the `project_setup()` function from the `project.setup` package.
+This vignette provides an introduction to the `project_setup()` function from the `quickquartosetup` package.
 
 To get started, install the package (if you haven't already):
 
 ```{r install, eval=FALSE}
 # install.packages("remotes")  # if not already installed
-remotes::install_github("dertristan/project_setup")
+remotes::install_github("dertristan/quickquartosetup")
 ```
 
 Then, load the package:
 
 ```{r setup}
-library(project.setup)
+library(quickquartosetup)
 ```
 
 ## Basic Usage

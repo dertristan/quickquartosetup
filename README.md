@@ -44,7 +44,7 @@ library(quickquartosetup)
 project_setup(project_name = "my_new_project")
 ```
 
-This creates a folder with:
+This creates a project folder with:
 
 - `manuscript.qmd` – main manuscript  
 - `presentation.qmd` – linked presentation  
@@ -54,7 +54,7 @@ This creates a folder with:
 - `images` folder – includes University logo (currently Mannheim School of Social Sciences)  
 - `theme.scss` – custom styling for Reveal.js presentations
 
-**Default structure**:
+**Project structure**:
 
 ```text
 vignettes/my_new_project
@@ -77,7 +77,7 @@ vignettes/my_new_project
     └── nmfs-opensci/titlepage
 ```
 
-The setup keeps data, code, and outputs clearly separated — making it easy to embed results directly into manuscripts or presentations using [Quarto’s embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
+The setup keeps data, code, and outputs clearly separated -- making it easy to embed results directly into manuscripts or presentations using [Quarto’s embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
 
 ---
 

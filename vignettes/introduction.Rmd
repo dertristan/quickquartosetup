@@ -1,7 +1,6 @@
 ---
 title: "Introduction to quickquartosetup"
 author: Tristan Muno
-date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to quickquartosetup}

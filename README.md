@@ -95,7 +95,8 @@ project_setup(
 )
 ```
 
-
+See example outputs from the above custom call: [`manuscript.pdf`](https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-manuscript.pdf) and
+[`presentation.qmd`](http://htmlpreview.github.io/?https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-presentation.html)
 
 See the vignette for an introduction and the documentation for all available arguments.
 

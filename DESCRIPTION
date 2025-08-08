@@ -1,5 +1,5 @@
 Package: project.setup
-Title: What the Package Does (One Line, Title Case)
+Title: A lightweight R package for streamlined research project setup with Quarto
 Version: 0.0.0.9000
 Authors@R: 
     person("Tristan", "Muno", , "trismuno@gmail.com", role = c("aut", "cre"))

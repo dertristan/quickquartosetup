@@ -16,23 +16,75 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Overview
 
-This vignette gives an overview on how to use the `project_setup` function. First, install the package if not done already:
+This vignette provides an introduction to the `project_setup()` function from the `project.setup` package.
 
-```{r install}
+To get started, install the package (if you haven't already):
+
+```{r install, eval=FALSE}
 # install.packages("remotes")  # if not already installed
-remotes::install_github("dertristan/project.setup")
+remotes::install_github("dertristan/project_setup")
 ```
 
-Next, load the package to the current session:
+Then, load the package:
 
 ```{r setup}
 library(project.setup)
 ```
 
-The package consists of one major function: `project_setup()`. The only necessary argument without which the function does not work is the project name, which tells the function how to name the overall parent directory it is going to create.
+## Basic Usage
 
-```{r}
+The package's core functionality is provided by a single main function: `project_setup()`. The only required argument is `project_name`, which determines the name of the parent directory that will be created.
+
+```{r project-setup-minimal}
 project_setup(project_name = "my_new_project")
 ```
 
+Running this command generates a complete project folder structure using the default settings. By default, the function creates three Quarto markdown files:
+
+- `manuscript.qmd`: for the main scientific manuscript
+- `presentaton.qmd` for the accompanying presentation
+- `01_code.qmd` a reproducible code notebook for data analysis
+
+This structure is designed to support an integrated scientific workflow, allowing users to embed results from the code notebook directly into the manuscript or presentation using [https://quarto.org/docs/authoring/notebook-embed.html](Quarto's embedding functionality).
+
+## Customization Options
+
+You can customize the project setup by providing additional arguments, such as a working title, subtitle, author name, and institutional affiliation. The `student_id` argument allows students to include their university ID, and setting `stat_decl = TRUE` adds a statutory declaration -- commonly required in student term papers.
+
+```{r project-setup-custom}
+project_setup(
+  project_name = "my_other_project",
+  author = "Bilbo Baggins",
+  title = "There and Back Again",
+  subtitle = "A Hobbit's Holiday",
+  institution = "Hobbiton Academy of Sciences",
+  student_id = 3791,
+  stat_decl = T
+)
+```
+
+This package is currently tailored for students and scholars at the University of Mannheim. As such, the default branding materials and statutory declaration are aligned with the University of Mannheim's academic requirements.
+
+
+### Optional Title Page
+
+Many German universities require a traditional title page for examination term papers. The `title_page` argument enables this option. When set to `TRUE`, a title page will be added to the PDF manuscript using the [Quarto Title Pages extension](https://nmfs-opensci.github.io/quarto_titlepages/)
+
+```{r project-setup-title-page}
+project_setup(
+  project_name = "my_last_project",
+  author = "Bilbo Baggins",
+  title = "There and Back Again",
+  subtitle = "A Hobbit's Holiday",
+  institution = "Hobbiton Academy of Sciences",
+  student_id = 3791,
+  title_page = T,
+  stat_decl = T
+)
+```
+
+### Final Remarks
+
+The `project_setup()` function is intended as a helpful starting point. For more advanced formatting, refinement, and customization, users are encourages to edit the generated Quarto files manually [(see Quarto documentation)](https://quarto.org/docs/guide/).

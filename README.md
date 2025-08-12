@@ -1,6 +1,6 @@
 # quickquartosetup
 
-This package grew out of a personal side project -- originally built just for my own workflow -- which I then turned into a documented R package as a way to learn package development.
+This package grew out of a personal side project – originally built just for my own workflow – which I then turned into a documented R package as a way to learn package development.
 
 ### A lightweight R package for fast, consistent research project setup with Quarto
 

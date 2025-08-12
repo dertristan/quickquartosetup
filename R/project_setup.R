@@ -228,7 +228,7 @@ project_setup <- function(
   ## @return Invisible `NULL`. Called for its side effects (item copying and messages).
   copy_items <- function(source_paths, dest_folder, overwrite) {
     # Ensure the destination folder exists before attempting to copy items.
-    create_folder(dest_folder)
+   # create_folder(dest_folder)
 
     # Separate existing source items from missing ones for clear feedback.
     existing_sources <- source_paths[file.exists(source_paths)]

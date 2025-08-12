@@ -139,7 +139,7 @@ project_setup <- function(
   # and the UMA style is requested.
   if (presentation && uma_style) {
     # Check if each source files can be found.
-    image_files_exists <- file.exists(system.file("images", package = "project.setup"))
+    image_files_exists <- file.exists(system.file("images", package = "quickquartosetup"))
 
 
     if (!image_files_exists) {
@@ -1034,13 +1034,13 @@ Thumbs.db
 
     message("\nCopying Quarto extensions (Wordcount & Titlepage)")
     copy_items(
-      source_paths = system.file("_extensions", package = "project.setup"),
+      source_paths = system.file("_extensions", package = "quickquartosetup"),
       dest_folder = getwd(),
       overwrite = overwrite
     )
 
     copy_items(
-      source_paths = system.file("images", package = "project.setup"),
+      source_paths = system.file("images", package = "quickquartosetup"),
       dest_folder = getwd(),
       overwrite = overwrite
     )

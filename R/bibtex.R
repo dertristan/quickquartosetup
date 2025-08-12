@@ -1,0 +1,31 @@
+# References Bibtex File -------------------------------------------------------
+
+ref_bib <- paste0(
+  "@article{article_key_here, \n",
+  "  author = {Lastname, Firstname and Lastname, Firstname}, \n",
+  "  title = {Title of the Article}, \n",
+  "  journal = {Journal Title}, \n",
+  "  year = {YYYY}, \n",
+  "  volume = {1}, \n",
+  "  number = {1}, \n",
+  "  pages = {1-10}, \n",
+  "  doi = {doi:10.1234/56789}\n",
+  "}\n\n",
+  "@book{book_key_here, \n",
+  "  author = {Lastname, Firstname}, \n",
+  "  title = {Title of the Book}, \n",
+  "  publisher = {Publisher Name}, \n",
+  "  address = {City, Country}, \n",
+  "  year = {YYYY}, \n",
+  "}\n\n",
+  "@incollection{incollection_key_here, \n",
+  "  author = {Lastname, Firstname}, \n",
+  "  title = {Title of the Chapter}, \n",
+  "  booktitle = {Title of the Edited Book}, \n",
+  "  editor = {Lastname, Firstname}, \n",
+  "  publisher = {Publisher Name}, \n",
+  "  address = {City, Country}, \n",
+  "  year = {YYYY}, \n",
+  "  pages = {1-10}, \n",
+  "}\n"
+)

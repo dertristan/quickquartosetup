@@ -99,7 +99,9 @@ project_setup(
 
 Here's a preview of the rendered manuscript and presentation:
 
-[![Screenshot of my presentation](https://raw.githubusercontent.com/dertristan/quickquartosetup/main/vignettes/my-other-project-rendered-presentation-firstslide.png)](https://raw.githubusercontent.com/dertristan/quickquartosetup/main/vignettes/my-other-project-rendered-presentation.html)
+[![Screenshot of manuscript](https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-manuscript-firstpage.png)]([https://raw.githubusercontent.com/username/repo/main/your_presentation.html](https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-manuscript.pdf))
+
+[![Screenshot of presentation](https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-presentation-firstslide.png)]([https://raw.githubusercontent.com/username/repo/main/your_presentation.html](https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-presentation.html))
 
 See the vignette for an introduction and the documentation for all available arguments.
 

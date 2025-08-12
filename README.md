@@ -126,18 +126,17 @@ See the vignette for an introduction and the documentation for all available arg
 
 - [ ] Fix installation warnings
 - [ ] Improve “Folder already exists” handling for Quarto extensions
-- [ ] Refactor helper functions into dedicated scripts
 - [ ] Make Quarto content creation modular
 - [ ] Add language options (starting with German)
 - [ ] Extend support for other Mannheim faculties
 - [ ] Add institutional templates for other universities
 - [ ] Include example citations in default manuscript
 - [ ] Provide Quarto learning examples (citations, quotes, figures, tables, equations, etc.)
-- [ ] Improve `theme.scss`
-- [ ] Find better package name
+- [ ] Improve `theme.scss` file(s)
 - [ ] Remove manual copying of extensions and instead remotely install them
 - [ ] Limit file copying to style template stuff
-- [ ] option for `.Rproj`?
+- [ ] Option for initializing `.Rproj` files on the fly too?
+- [ ] Consistent default and branded files, with branding being modular and extendable 
 
 ---
 

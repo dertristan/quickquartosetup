@@ -128,6 +128,7 @@ See the vignette for an introduction and the documentation for all available arg
 - [ ] Find better package name
 - [ ] Remove manual copying of extensions and instead remotely install them
 - [ ] Limit file copying to style template stuff
+- [ ] option for `.Rproj`?
 
 ---
 

@@ -28,7 +28,7 @@ Install the development version from GitHub:
 
 ```r
 # install.packages("remotes")  # if not already installed
-remotes::install_github("dertristan/quickquartosetup")
+remotes::install_github("dertristan/quickquartosetup", build_vignettes = TRUE)
 ```
 
 ---

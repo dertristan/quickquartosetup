@@ -125,7 +125,7 @@ See the vignette for an introduction and the documentation for all available arg
 `quickquartosetup` is under development. Planned improvements include:
 
 - [ ] Make Quarto content creation modular
-    - [ ] Consistent default and branded files, with branding being modular and extendable
+    - [ ] Consistent default and branded files for manuscript (with and without titlepage) and presentation, with branding being modular and extendable
     - [ ] Extend support for other Mannheim faculties
     - [ ] Add institutional templates for other universities
     - [ ] Improve `theme.scss` file(s)

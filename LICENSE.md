@@ -70,6 +70,6 @@ By using this package, you agree to abide by these terms and confirm that your u
 | Component                         | License / Terms               |
 |----------------------------------|-------------------------------|
 | R package code                   | MIT License                   |
-| Quarto titlepages extension      | CC BY 4.0                     |
+| Quarto titlepages extension      | CC0 1.0                     |
 | Quarto wordcount extension       | MIT License                   |
 | `uma_palace.png`, `uma_ss.png`  | All Rights Reserved (UMA)     |

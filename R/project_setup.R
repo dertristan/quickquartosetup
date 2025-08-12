@@ -227,101 +227,29 @@ project_setup <- function(
   ##   not be copied.
   ## @return Invisible `NULL`. Called for its side effects (item copying and messages).
   copy_items <- function(source_paths, dest_folder, overwrite) {
-    # Ensure the destination folder exists before attempting to copy items.
-   # create_folder(dest_folder)
-
-    # Separate existing source items from missing ones for clear feedback.
-    existing_sources <- source_paths[file.exists(source_paths)]
-    missing_sources <- source_paths[!file.exists(source_paths)]
-
-    # Warn about any source items that could not be found.
-    if (length(missing_sources) > 0) {
-      warning(
-        "Some source items are missing and will not be copied: ",
-        paste(sQuote(missing_sources), collapse = ", ")
-      )
+    # Check if the destination folder exists, create if not
+    if (!dir.exists(dest_folder)) {
+      dir.create(dest_folder, recursive = TRUE)
     }
 
-    if (length(existing_sources) > 0) {
-      # Initialize a logical vector to track success for each item.
-      success_status <- logical(length(existing_sources))
-
-      # Loop through each source item to handle files and directories appropriately.
-      for (i in seq_along(existing_sources)) {
-        src <- existing_sources[i] # Current source path
-
-        if (dir.exists(src)) {
-          # --- Handle Directories ---
-          # When copying a directory, 'to' should be the *parent* directory
-          # where the source directory (e.g., '_extensions') will be placed.
-          # The result will be 'dest_folder/_extensions'.
-          dest_path_for_dir <- file.path(dest_folder, basename(src))
-
-          # If the target directory already exists and overwrite is FALSE, skip.
-          if (dir.exists(dest_path_for_dir) && !overwrite) {
-            message("  -> Directory already exists (skipping, overwrite = FALSE): '", dest_path_for_dir, "'")
-            success_status[i] <- TRUE # Consider it a success if skipped due to no-overwrite
-            next # Move to the next item
-          } else if (dir.exists(dest_path_for_dir) && overwrite) {
-            # If overwriting an existing directory, it's safer to remove it first.
-            # This ensures a clean copy and prevents unexpected merging behavior
-            # from file.copy's recursive overwrite.
-            message("  -> Overwriting existing directory: '", dest_path_for_dir, "' (removing old content)")
-            unlink(dest_path_for_dir, recursive = TRUE, force = TRUE)
-          }
-
-          # Perform the copy for the directory.
-          success_status[i] <- file.copy(
-            from = src,
-            to = dest_folder, # Copy 'src' (the directory) INTO 'dest_folder'
-            recursive = TRUE, # Essential for copying directory contents
-            overwrite = overwrite # Applies to files *within* the copied directory
-          )
-          message("  -> Copied directory: '", src, "' to '", dest_path_for_dir, "'")
-        } else if (file.exists(src)) {
-          # --- Handle Files ---
-          # When copying a file, 'to' should be the full path including the new filename.
-          dest_path_for_file <- file.path(dest_folder, basename(src))
-
-          # If the target file already exists and overwrite is FALSE, skip.
-          if (file.exists(dest_path_for_file) && !overwrite) {
-            message("  -> File already exists (skipping, overwrite = FALSE): '", dest_path_for_file, "'")
-            success_status[i] <- TRUE
-            next
-          }
-
-          # Perform the copy for the file.
-          success_status[i] <- file.copy(
-            from = src,
-            to = dest_path_for_file,
-            overwrite = overwrite,
-            recursive = FALSE # Not needed for files, but harmless to explicitly state
-          )
-          message("  -> Copied file: '", src, "' to '", dest_path_for_file, "'")
-        } else {
-          # This case should ideally not be reached due to the 'existing_sources' filter,
-          # but it's here for robustness.
-          message("  -> Warning: Source item not found during copy attempt: '", src, "'")
-          success_status[i] <- FALSE
-        }
+    # Iterate over each source path
+    for (src in source_paths) {
+      # Check if the source path exists
+      if (!file.exists(src)) {
+        warning(paste("Source item missing:", src))
+        next
       }
 
-      # Provide feedback on the copy operation's overall success.
-      if (all(success_status)) {
-        message("  -> All specified items copied successfully to '", dest_folder, "'")
+      # If the source is a directory, copy recursively
+      if (file.info(src)$isdir) {
+        # Use file.path to create the destination path inside the new project
+        dest_path <- file.path(dest_folder, basename(src))
+        file.copy(from = src, to = dest_path, recursive = TRUE, overwrite = overwrite)
       } else {
-        # Identify which items failed to copy (e.g., due to permissions).
-        failed_copies <- existing_sources[!success_status]
-        warning(
-          "Some items could not be copied to '", dest_folder, "': ",
-          paste(sQuote(failed_copies), collapse = ", "),
-          ". This might be due to permissions or other unexpected errors."
-        )
+        # If the source is a file, copy directly
+        file.copy(from = src, to = dest_folder, overwrite = overwrite)
       }
-    } else {
-      message("  -> No existing source items found to copy.")
     }
-    invisible(NULL) # Return invisible NULL as this function is for side effects
   }
 
 

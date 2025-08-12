@@ -227,29 +227,35 @@ project_setup <- function(
   ##   not be copied.
   ## @return Invisible `NULL`. Called for its side effects (item copying and messages).
   copy_items <- function(source_paths, dest_folder, overwrite) {
+    message("Starting copy_items function.")
+    message(paste("Source paths:", paste(source_paths, collapse = ", ")))
+    message(paste("Destination folder:", dest_folder))
+
     # Check if the destination folder exists, create if not
     if (!dir.exists(dest_folder)) {
+      message(paste("Destination folder does not exist. Creating:", dest_folder))
       dir.create(dest_folder, recursive = TRUE)
+    } else {
+      message(paste("Destination folder already exists:", dest_folder))
     }
 
     # Iterate over each source path
     for (src in source_paths) {
+      message(paste("Processing source item:", src))
+
       # Check if the source path exists
       if (!file.exists(src)) {
         warning(paste("Source item missing:", src))
+        message(paste("Skipping missing item:", src))
         next
       }
 
-      # If the source is a directory, copy recursively
-      if (file.info(src)$isdir) {
-        # Use file.path to create the destination path inside the new project
-        dest_path <- file.path(dest_folder, basename(src))
-        file.copy(from = src, to = dest_path, recursive = TRUE, overwrite = overwrite)
-      } else {
-        # If the source is a file, copy directly
-        file.copy(from = src, to = dest_folder, overwrite = overwrite)
-      }
+      # Use file.copy with the destination folder as the 'to' argument
+      message(paste("Copying from:", src, "to:", dest_folder))
+      file.copy(from = src, to = dest_folder, recursive = TRUE, overwrite = overwrite)
+      message(paste("Copy of", src, "complete."))
     }
+    message("copy_items function finished.")
   }
 
 

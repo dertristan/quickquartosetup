@@ -99,14 +99,17 @@ project_setup(
 
 Here's a preview of the rendered manuscript and presentation based on the function call above:
 
-<p align="center">
+<div align="center">
   <a href="https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-manuscript.pdf">
-    <img src="https://raw.githubusercontent.com/dertristan/quickquartosetup/main/vignettes/my-other-project-rendered-manuscript-firstpage.png" alt="Screenshot of manuscript" width="30%">
+    <img src="https://raw.githubusercontent.com/dertristan/quickquartosetup/main/vignettes/my-other-project-rendered-manuscript-firstpage.png" alt="Screenshot of manuscript" width="40%">
   </a>
+</div>
+
+<div align="center">
   <a href="https://raw.githubusercontent.com/dertristan/quickquartosetup/main/vignettes/my-other-project-rendered-presentation.html">
     <img src="https://raw.githubusercontent.com/dertristan/quickquartosetup/main/vignettes/my-other-project-rendered-presentation-firstslide.png" alt="Screenshot of presentation" width="50%">
   </a>
-</p>
+</div>
 
 See the vignette for an introduction and the documentation for all available arguments.
 

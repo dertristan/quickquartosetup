@@ -3,4 +3,7 @@
 .RData
 .Ruserdata
 inst/doc
-dev-guide.md
+
+dev-guide.qmd
+dev-guide.html
+dev-guide_files

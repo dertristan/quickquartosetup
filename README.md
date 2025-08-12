@@ -1,6 +1,6 @@
-# quickquartosetup
-
 This package grew out of a personal side project – originally built just for my own workflow – which I then turned into a documented R package as a way to learn package development.
+
+# quickquartosetup
 
 ### A lightweight R package for fast, consistent research project setup with Quarto
 
@@ -28,7 +28,7 @@ Install the development version from GitHub:
 
 ```r
 # install.packages("remotes")  # if not already installed
-remotes::install_github("dertristan/quickquartosetup")
+remotes::install_github("dertristan/quickquartosetup", build_vignettes = TRUE)
 ```
 
 ---
@@ -126,6 +126,9 @@ See the vignette for an introduction and the documentation for all available arg
 - [ ] Provide Quarto learning examples (citations, quotes, figures, tables, equations, etc.)
 - [ ] Improve `theme.scss`
 - [ ] Find better package name
+- [ ] Remove manual copying of extensions and instead remotely install them
+- [ ] Limit file copying to style template stuff
+- [ ] option for `.Rproj`?
 
 ---
 

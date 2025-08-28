@@ -120,7 +120,7 @@ See the vignette for an introduction and the documentation for all available arg
 
 ---
 
-## 🛠 Development Status (August 2025)
+## 🛠 Development Status (September 2025)
 
 `quickquartosetup` is under development. Planned improvements include:
 

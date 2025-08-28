@@ -137,6 +137,7 @@ See the vignette for an introduction and the documentation for all available arg
     - [ ] Include (real) example citations in default manuscript
     - [ ] Provide Quarto learning examples (citations, quotes, figures, tables, equations, etc.)
     - [ ] Miltibib option for separate primary and secondary references
+    - [ ] Custom Titlepage for students
 - [ ] Technical To-Dos
     - [ ] Fix installation warnings
     - [ ] Improve “Folder already exists” handling for Quarto extensions

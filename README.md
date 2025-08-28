@@ -59,7 +59,7 @@ This creates a project folder with:
 **Project structure**:
 
 ```text
-vignettes/my_new_project
+my_new_project
 ├── code
 │   └── 01_code.qmd
 ├── data

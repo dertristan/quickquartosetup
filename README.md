@@ -144,6 +144,7 @@ See the vignette for an introduction and the documentation for all available arg
     - [ ] Switch from manual copying of extensions to installing them from their source repos
     - [ ] Limit file copying to style/brand stuff
     - [ ] Option for initializing `.Rproj` files on the fly too?
+    - [ ] Add technical requirements to setup tutorial
 
 
 ---

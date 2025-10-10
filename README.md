@@ -79,7 +79,7 @@ my_new_project
     └── nmfs-opensci/titlepage
 ```
 
-The setup keeps data, code, and outputs clearly separated -- making it easy to embed results directly into manuscripts or presentations using [Quarto’s embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
+The setup keeps data, code, and outputs clearly separated -- making it easy to embed computed results directly into manuscripts or presentations using [Quarto’s embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
 
 ---
 

@@ -59,7 +59,7 @@ This creates a project folder with:
 **Project structure**:
 
 ```text
-vignettes/my_new_project
+my_new_project
 ├── code
 │   └── 01_code.qmd
 ├── data
@@ -79,7 +79,7 @@ vignettes/my_new_project
     └── nmfs-opensci/titlepage
 ```
 
-The setup keeps data, code, and outputs clearly separated -- making it easy to embed results directly into manuscripts or presentations using [Quarto’s embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
+The setup keeps data, code, and outputs clearly separated -- making it easy to embed computed results directly into manuscripts or presentations using [Quarto’s embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
 
 ---
 
@@ -120,7 +120,7 @@ See the vignette for an introduction and the documentation for all available arg
 
 ---
 
-## 🛠 Development Status (August 2025)
+## 🛠 Development Status (September 2025)
 
 `quickquartosetup` is under development. Planned improvements include:
 
@@ -136,6 +136,8 @@ See the vignette for an introduction and the documentation for all available arg
 - [ ] Quarto content
     - [ ] Include (real) example citations in default manuscript
     - [ ] Provide Quarto learning examples (citations, quotes, figures, tables, equations, etc.)
+    - [ ] Miltibib option for separate primary and secondary references
+    - [ ] Custom Titlepage for students
 - [ ] Technical To-Dos
     - [ ] Fix installation warnings
     - [ ] Improve “Folder already exists” handling for Quarto extensions

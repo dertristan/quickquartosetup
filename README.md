@@ -145,6 +145,7 @@ See the vignette for an introduction and the documentation for all available arg
     - [ ] Limit file copying to style/brand stuff
     - [ ] Option for initializing `.Rproj` files on the fly too?
     - [ ] Add prerequisites to the installation guide
+    - [ ] add helper scripts by default
 
 
 ---

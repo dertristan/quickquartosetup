@@ -1,5 +1,3 @@
-This package grew out of a personal side project – originally built just for my own workflow – which I then turned into a documented R package as a way to learn package development.
-
 # quickquartosetup
 
 ### A lightweight R package for fast, consistent research project setup with Quarto
@@ -7,7 +5,9 @@ This package grew out of a personal side project – originally built just for m
 **`quickquartosetup`** makes starting a new research project painless.  
 With a single call to `project_setup()`, you can instantly create a clean, reproducible folder structure, complete with essential starter files designed for academic workflows.
 
-Whether you’re writing a manuscript, preparing a presentation, or organizing your analysis pipeline, `quickquartosetup` helps you work faster and stay organized. The structure follows best practices in academic research and is based on the author’s experience managing multiple projects efficiently.
+Whether you're writing a manuscript, preparing a presentation, or organizing your analysis pipeline, `quickquartosetup` helps you work faster and stay organized. The structure follows best practices in academic research and is based on the author's experience managing multiple projects efficiently.
+
+> **Note:** This package originated as a personal side project and is now being actively developed as a course companion for [QMIR – Quantitative Methods in International Relations and European Politics](https://github.com/qmir-2026) at the University of Mannheim. The goal is a **minimalist, dependency-light package** optimized for the workflow taught in the course: **R + Quarto + Git/GitHub in Positron**. It is intentionally kept simple and opinionated to lower the barrier for students applying course workflows to their own term papers and theses.
 
 ---
 
@@ -79,7 +79,7 @@ my_new_project
     └── nmfs-opensci/titlepage
 ```
 
-The setup keeps data, code, and outputs clearly separated -- making it easy to embed computed results directly into manuscripts or presentations using [Quarto’s embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
+The setup keeps data, code, and outputs clearly separated -- making it easy to embed computed results directly into manuscripts or presentations using [Quarto's embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
 
 ---
 
@@ -96,7 +96,6 @@ project_setup(
   stat_decl = TRUE
 )
 ```
-
 
 Here's a preview of the rendered manuscript and presentation based on the function call above:
 
@@ -120,32 +119,38 @@ See the vignette for an introduction and the documentation for all available arg
 
 ---
 
-## 🛠 Development Status (September 2025)
+## 🛠 Development Status
 
-`quickquartosetup` is under development. Planned improvements include:
+`quickquartosetup` is under active development. The next major focus is simplification and tailoring for the QMIR course workflow, moving towards a minimalist package with no external extension dependencies. Planned improvements include:
 
-- [ ] Make Quarto content creation modular
-    - [ ] Consistent default and branded files for manuscript (with and without titlepage) and presentation, with branding being modular and extendable
-    - [ ] Extend support for other Mannheim faculties
-    - [ ] Add institutional templates for other universities
-    - [ ] Improve `theme.scss` file(s)
-- [ ] Metadata Handling
-    - [ ] Create one central YAML
-    - [ ] Add language options (starting with German)
-    - [ ] Edit default PDF to include all academic metadata
-- [ ] Quarto content
-    - [ ] Include (real) example citations in default manuscript
-    - [ ] Provide Quarto learning examples (citations, quotes, figures, tables, equations, etc.)
-    - [ ] Miltibib option for separate primary and secondary references
-    - [ ] Custom Titlepage for students
-- [ ] Technical To-Dos
-    - [ ] Fix installation warnings
-    - [ ] Improve “Folder already exists” handling for Quarto extensions
-    - [ ] Switch from manual copying of extensions to installing them from their source repos
-    - [ ] Limit file copying to style/brand stuff
-    - [ ] Option for initializing `.Rproj` files on the fly too?
-    - [ ] Add prerequisites to the installation guide
+### Core simplification (QMIR course focus)
+- [ ] Remove Quarto extension dependencies (wordcount, titlepages) — implement title page natively
+- [ ] Remove institution-specific branding (logos, university-specific files) — make templates generic and institution-agnostic
+- [ ] Streamline default project structure to match the QMIR course workflow (R + Quarto + Git/GitHub in Positron)
 
+### Manuscript & output options
+- [ ] Consistent default templates for manuscript (with and without title page) and presentation
+- [ ] Native title page implementation without external extension
+- [ ] Improve `theme.scss` for Reveal.js presentations
+- [ ] Statutory declaration as standalone, institution-agnostic template
+
+### Metadata & configuration
+- [ ] Create one central YAML metadata file for all project documents
+- [ ] Language support — starting with **German** (for humanities workflows)
+- [ ] Edit default PDF to include all academic metadata
+
+### Quarto learning content
+- [ ] Include commented examples for common Quarto features: citations, figures, tables, equations, cross-references
+- [ ] Optional helper scripts for common tasks
+- [ ] Multibib option for separate primary and secondary references
+- [ ] Custom title page for students
+
+### Technical
+- [ ] Fix installation warnings
+- [ ] Improve "folder already exists" handling for Quarto extensions
+- [ ] Switch from manual copying of extensions to installing them from source repos (until extensions are dropped)
+- [ ] Option for initializing `.Rproj` files on the fly
+- [ ] Add prerequisites to the installation guide
 
 ---
 

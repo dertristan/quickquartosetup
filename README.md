@@ -28,7 +28,7 @@ Install the development version from GitHub:
 
 ```r
 # install.packages("remotes")  # if not already installed
-remotes::install_github("dertristan/quickquartosetup", build_vignettes = TRUE)
+remotes::install_github("dertristan/quickquartosetup", build_vignettes = FALSE)
 ```
 
 ---
@@ -91,7 +91,7 @@ project_setup(
 )
 ```
 
-Here's a preview of the rendered manuscript and presentation based on an earlier configuration:
+Here's a (outdated) preview of the rendered manuscript and presentation based on an earlier configuration:
 
 <p align="center">
   <a href="https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-manuscript.pdf">
@@ -157,4 +157,4 @@ MIT License © Tristan Muno
 
 If you use this package in your research:
 
-> Muno, Tristan (2025). *quickquartosetup: A lightweight R package for streamlined research project setup with Quarto*. https://github.com/dertristan/quickquartosetup
+> Muno, Tristan (2026). *quickquartosetup: A lightweight R package for streamlined research project setup with Quarto*. https://github.com/dertristan/quickquartosetup

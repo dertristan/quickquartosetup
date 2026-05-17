@@ -313,8 +313,6 @@ author: \"",
     "
 thanks: |
    You can add acknowledgements here.
-date: last-modified
-date-format: MMMM D, YYYY
 format:
   pdf:
     keep-tex: false
@@ -323,15 +321,6 @@ format:
       text: |
         \\usepackage{setspace}
         \\setlength{\\parindent}{15pt}
-execute:
-  echo: false
-  warning: false
-  eval: true
-  include: true
-  cache: true
-bibliography: references.bib
-biblio-style: apsr
-link-citations: true
 number-sections: true
 papersize: a4
 fontsize: 12pt
@@ -447,8 +436,6 @@ abstract: |
   You can add an abstract here.
 thanks: |
    You can add acknowledgements here.
-date: last-modified
-date-format: MMMM D, YYYY
 format:
   pdf:
     keep-tex: false
@@ -458,15 +445,6 @@ format:
       text: |
         \\usepackage{setspace}
         \\setlength{\\parindent}{15pt}
-execute:
-  echo: false
-  warning: false
-  eval: true
-  include: true
-  cache: true
-bibliography: references.bib
-biblio-style: apsr
-link-citations: true
 number-sections: true
 papersize: a4
 fontsize: 12pt
@@ -579,12 +557,6 @@ geometry:
 
   # Code QMD ---------------------------------------------------------------------
 
-  department_yaml_line <- if (!is.null(department)) {
-    paste0("\n        department: ", department)
-  } else {
-    ""
-  }
-
   quarto_code_notebook <- paste0(
     "---
 title: |
@@ -595,20 +567,6 @@ subtitle: |
     ": ",
     subtitle,
     "
-author:
-  - name: ",
-    author,
-    "
-    email: ",
-    mail,
-    "
-    affiliations:
-      - name: ",
-    institution,
-    department_yaml_line,
-    "
-date: last-modified
-date-format: MMMM D, YYYY
 format:
   html:
     toc: true
@@ -687,19 +645,12 @@ message(paste(\"Document rendered in:\", round(as.numeric(rendering_time, units 
 
   quarto_presentation_content_default <- paste(
     "---
-author: ",
-    author,
-    "
 title: ",
     title,
     "
 subtitle: ",
     subtitle,
     "
-date: last-modified
-date-format: MMMM D, YYYY
-bibliography: references.bib
-biblio-style: apsr
 format:
   revealjs:
     embed-resources: true
@@ -781,13 +732,12 @@ preview-links: true
 
   quarto_presentation_content_uma <- paste(
     "---
-author:",
-    author,
+title: ",
+    title,
     "
-date: last-modified
-date-format: MMMM D, YYYY
-bibliography: references.bib
-biblio-style: apsr
+subtitle: ",
+    subtitle,
+    "
 format:
   revealjs:
     embed-resources: true
@@ -938,6 +888,26 @@ $presentation-heading-color: ", theme_color, ";
 "
   )
 
+  # Project-level _quarto.yml ----------------------------------------------------
+
+  quarto_project_yaml_content <- paste0(
+    "project:\n",
+    "  type: default\n",
+    "\n",
+    "author: \"", author, "\"\n",
+    "date: last-modified\n",
+    "date-format: MMMM D, YYYY\n",
+    "bibliography: references.bib\n",
+    "biblio-style: apsr\n",
+    "link-citations: true\n",
+    "\n",
+    "execute:\n",
+    "  echo: false\n",
+    "  warning: false\n",
+    "  eval: true\n",
+    "  cache: true\n"
+  )
+
   # Gitignore file ---------------------------------------------------------------
 
   gitignore_content <- "
@@ -984,6 +954,14 @@ Thumbs.db
   create_file_with_content(
     file_path = "references.bib",
     content = ref_bib,
+    overwrite = overwrite
+  )
+
+  # --- Create project-level _quarto.yml ---
+  message("\nCreating _quarto.yml project metadata file...")
+  create_file_with_content(
+    file_path = "_quarto.yml",
+    content = quarto_project_yaml_content,
     overwrite = overwrite
   )
 

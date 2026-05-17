@@ -15,10 +15,11 @@ Whether you're writing a manuscript, preparing a presentation, or organizing you
 
 - **One command, full setup** – Create a ready-to-use project structure with `project_setup()`.
 - **Built-in Quarto integration** – Automatically generates `.qmd` files for manuscripts, presentations, and notebooks.
-- **Custom metadata** – Add title, subtitle, author, institution, and more right at setup.
-- **Student-ready options** – Include statutory declarations and student IDs for term papers.
-- **Optional title page** – Generate formal academic title pages for examination papers.
-- **University of Mannheim support** – Preloaded branding and statutory declaration (currently tailored to the School of Social Sciences at the University of Mannheim, with support for other institutions planned).
+- **Custom metadata** – Add title, subtitle, author, institution, department, and more right at setup.
+- **Centralized project metadata** – A single `_quarto.yml` defines shared metadata (author, date, bibliography, execute defaults) for every document.
+- **Student-ready options** – Include a bilingual (German/English) statutory declaration and student IDs for term papers.
+- **Native title page** – Optional `title-page.tex` included before the manuscript body. No Quarto extensions required.
+- **Customizable presentation theme** – Optional `theme.scss` for Reveal.js, with the primary color controlled by a single `theme_color` parameter.
 
 ---
 
@@ -48,35 +49,29 @@ project_setup(project_name = "my_new_project")
 
 This creates a project folder with:
 
-- `manuscript.qmd` – main manuscript  
-- `presentation.qmd` – linked presentation  
-- `01_code.qmd` – reproducible code notebook  
-- `data` folder – with raw, processed, and final subfolders  
-- `references.bib` – shared bibliography  
-- `images` folder – includes University logo (currently Mannheim School of Social Sciences)  
-- `theme.scss` – custom styling for Reveal.js presentations
+- `_quarto.yml` – project-level metadata (author, date, bibliography, execute defaults) shared across documents
+- `manuscript.qmd` – main manuscript
+- `presentation.qmd` – linked presentation
+- `01_code.qmd` – reproducible code notebook
+- `data` folder – with raw, processed, and final subfolders
+- `references.bib` – shared bibliography
 
-**Project structure**:
+When `title_page = TRUE` a native `title-page.tex` snippet is added and pulled in via `include-before-body`. When `uma_style = TRUE` a `theme.scss` is generated for the Reveal.js presentation.
+
+**Project structure (defaults)**:
 
 ```text
 my_new_project
+├── _quarto.yml
 ├── code
 │   └── 01_code.qmd
 ├── data
 │   ├── 01_raw
 │   ├── 02_processed
 │   └── 03_final
-├── images
-│   ├── COPYRIGHTS.md
-│   ├── uma_palace.png
-│   └── uma_ss.png
 ├── manuscript.qmd
 ├── presentation.qmd
-├── references.bib
-├── theme.scss
-└── _extensions
-    ├── andrewheiss/wordcount
-    └── nmfs-opensci/titlepage
+└── references.bib
 ```
 
 The setup keeps data, code, and outputs clearly separated -- making it easy to embed computed results directly into manuscripts or presentations using [Quarto's embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
@@ -114,28 +109,27 @@ See the vignette for an introduction and the documentation for all available arg
 
 ## 🙌 Credits
 
-- [Quarto wordcount extension](https://github.com/andrewheiss/quarto-wordcount) -- developed by [Andrew Heiss](https://github.com/andrewheiss)  
-- [Quarto titlepages extension](https://github.com/nmfs-opensci/quarto_titlepages) -- developed by [NMFS Open Science](https://github.com/nmfs-opensci)
+Earlier versions of the package bundled the [Quarto wordcount extension](https://github.com/andrewheiss/quarto-wordcount) by [Andrew Heiss](https://github.com/andrewheiss) and the [Quarto titlepages extension](https://github.com/nmfs-opensci/quarto_titlepages) by [NMFS Open Science](https://github.com/nmfs-opensci). The native title page now used in the package was inspired by their work.
 
 ---
 
 ## 🛠 Development Status
 
-`quickquartosetup` is under active development. The next major focus is simplification and tailoring for the QMIR course workflow, moving towards a minimalist package with no external extension dependencies. Planned improvements include:
+`quickquartosetup` is under active development. The current focus is simplification and tailoring for the QMIR course workflow.
 
 ### Core simplification (QMIR course focus)
-- [ ] Remove Quarto extension dependencies (wordcount, titlepages) — implement title page natively
-- [ ] Remove institution-specific branding (logos, university-specific files) — make templates generic and institution-agnostic
+- [x] Remove Quarto extension dependencies (wordcount, titlepages) — title page implemented natively
+- [x] Remove institution-specific branding (logos, university-specific files) — templates are now generic and institution-agnostic
 - [ ] Streamline default project structure to match the QMIR course workflow (R + Quarto + Git/GitHub in Positron)
 
 ### Manuscript & output options
-- [ ] Consistent default templates for manuscript (with and without title page) and presentation
-- [ ] Native title page implementation without external extension
+- [x] Consistent default templates for manuscript (with and without title page) and presentation
+- [x] Native title page implementation without external extension
 - [ ] Improve `theme.scss` for Reveal.js presentations
-- [ ] Statutory declaration as standalone, institution-agnostic template
+- [x] Statutory declaration as standalone, institution-agnostic template
 
 ### Metadata & configuration
-- [ ] Create one central YAML metadata file for all project documents
+- [x] Create one central YAML metadata file for all project documents
 - [ ] Language support — starting with **German** (for humanities workflows)
 - [ ] Edit default PDF to include all academic metadata
 
@@ -147,8 +141,6 @@ See the vignette for an introduction and the documentation for all available arg
 
 ### Technical
 - [ ] Fix installation warnings
-- [ ] Improve "folder already exists" handling for Quarto extensions
-- [ ] Switch from manual copying of extensions to installing them from source repos (until extensions are dropped)
 - [ ] Option for initializing `.Rproj` files on the fly
 - [ ] Add prerequisites to the installation guide
 

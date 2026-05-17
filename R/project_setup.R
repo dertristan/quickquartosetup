@@ -468,7 +468,7 @@ execute:
 ```{r}
 #| label: setup
 
-# To track render duration
+# To track computation time
 start_time <- Sys.time()
 
 # set width of console output
@@ -509,16 +509,16 @@ session_info()
 ```
 
 
-# Render Time
+# Computation Time
 
 ```{r}
-#| label: render-time
+#| label: computation-time
 
 end_time <- Sys.time()
 
-rendering_time <- end_time - start_time
+computation_time <- end_time - start_time
 
-message(paste(\"Document rendered in:\", round(as.numeric(rendering_time, units = \"secs\"), 2), \"seconds.\n\"))
+message(paste(\"Computation completed in:\", round(as.numeric(computation_time, units = \"secs\"), 2), \"seconds.\n\"))
 ```
 
 

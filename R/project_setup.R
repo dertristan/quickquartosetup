@@ -202,10 +202,6 @@ subtitle: |
     "
 abstract: |
   You can add an abstract here.
-author: \"",
-    author_with_details,
-    "\"",
-    "
 thanks: |
    You can add acknowledgements here.
 format:
@@ -550,7 +546,7 @@ message(paste(\"Document rendered in:\", round(as.numeric(rendering_time, units 
     "project:\n",
     "  type: default\n",
     "\n",
-    "author: \"", author, "\"\n",
+    "author: \"", author_with_details, "\"\n",
     "date: last-modified\n",
     "date-format: MMMM D, YYYY\n",
     "bibliography: references.bib\n",

@@ -5,12 +5,8 @@
 \title{Project Setup}
 \usage{
 project_setup(
-  project_name = "",
-  target_path = ".",
   manuscript = TRUE,
   author = NULL,
-  institution = NULL,
-  department = NULL,
   mail = NULL,
   student_id = NULL,
   title = NULL,
@@ -18,8 +14,6 @@ project_setup(
   title_page = FALSE,
   stat_decl = FALSE,
   presentation = TRUE,
-  uma_style = FALSE,
-  theme_color = "#333333",
   code_files = TRUE,
   data_folders = TRUE,
   gitignore = TRUE,
@@ -27,45 +21,35 @@ project_setup(
 )
 }
 \arguments{
-\item{project_name}{A character string specifying the project name. This will be used to name the main project directory. Defaults to an empty string (\code{""}).}
-
-\item{target_path}{A character string specifying the path where the project should be created. You can specify a custom path; otherwise, the current working directory is used. Defaults to \code{"."}.}
-
 \item{manuscript}{Logical. If \code{TRUE}, creates a Quarto manuscript file (\code{manuscript.qmd}). Defaults to \code{TRUE}.}
 
-\item{author}{A character string specifying the author's name. Included in manuscript, presentation, and code files. Defaults to \code{NULL}.}
+\item{author}{A character string specifying the author's name. Used in the project-level \verb{_quarto.yml}. Defaults to \code{NULL} (system username).}
 
-\item{institution}{A character string specifying the author's institution. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
+\item{mail}{A character string specifying the author's email address. When non-default, included as a footnote on the author. Defaults to \code{NULL}.}
 
-\item{department}{A character string specifying the author's department or school. When \code{NULL}, no department line is rendered. Defaults to \code{NULL}.}
+\item{student_id}{A character string specifying the student's ID. When non-default, included as a footnote on the author. Defaults to \code{NULL}.}
 
-\item{mail}{A character string specifying the author's email address. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
+\item{title}{A character string specifying the working title of the project. Used in manuscript and presentation. Defaults to \code{NULL}.}
 
-\item{student_id}{A character string specifying the student's ID. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
-
-\item{title}{A character string specifying the working title of the project. Used in manuscript, presentation, and code files. Defaults to \code{NULL}.}
-
-\item{subtitle}{A character string specifying the subtitle of the project. Used in presentation and code files. Defaults to \code{NULL}.}
+\item{subtitle}{A character string specifying the subtitle of the project. Used in manuscript and presentation. Defaults to \code{NULL}.}
 
 \item{title_page}{Logical. If \code{TRUE}, generates a native LaTeX title page (\code{title-page.tex}) included before the manuscript body. Defaults to \code{FALSE}.}
 
-\item{stat_decl}{Logical. If \code{TRUE}, adds a statutory declaration (e.g., for exam papers). Defaults to \code{FALSE}.}
+\item{stat_decl}{Logical. If \code{TRUE}, adds a bilingual (German/English) statutory declaration (e.g., for exam papers). Defaults to \code{FALSE}.}
 
-\item{presentation}{Logical. If \code{TRUE}, creates a Quarto Reveal.js presentation (\code{presentation.qmd}). Defaults to \code{TRUE}.}
+\item{presentation}{Logical. If \code{TRUE}, creates a minimal Quarto Reveal.js presentation (\code{presentation.qmd}). Defaults to \code{TRUE}.}
 
-\item{uma_style}{Logical. If \code{TRUE}, generates a \code{theme.scss} and applies it to the presentation. Defaults to \code{FALSE}.}
+\item{code_files}{Logical. If \code{TRUE}, creates a code notebook file (\verb{code/01_code.qmd}). Defaults to \code{TRUE}.}
 
-\item{theme_color}{A character string specifying a hex color used as the primary color in \code{theme.scss}. Only applies when \code{uma_style = TRUE}. Defaults to \code{"#333333"}.}
-
-\item{code_files}{Logical. If \code{TRUE}, creates a code notebook file (\verb{01_code.qmd}) for documentation. Defaults to \code{TRUE}.}
-
-\item{data_folders}{Logical. If \code{TRUE}, creates standard data subfolders (\code{raw}, \code{processed}, \code{final}). Defaults to \code{TRUE}.}
+\item{data_folders}{Logical. If \code{TRUE}, creates standard data subfolders (\verb{01_raw}, \verb{02_processed}, \verb{03_final}). Defaults to \code{TRUE}.}
 
 \item{gitignore}{Logical. If \code{TRUE}, generates a \code{.gitignore} file. Defaults to \code{TRUE}.}
 
-\item{overwrite}{Logical. If \code{TRUE}, allows overwriting existing files or folders with the same names. Defaults to \code{TRUE}.}
+\item{overwrite}{Logical. If \code{TRUE}, allows overwriting files that \code{project_setup()} itself generates. Pre-existing user files are never touched. Defaults to \code{TRUE}.}
 }
 \description{
-Initializes a new R project with a standardized folder structure and optional files
-for manuscripts, presentations, code, and data management.
+Scaffolds a standardized research project folder structure (manuscript, presentation,
+code notebook, data folders, bibliography, \verb{_quarto.yml}) directly into the current
+working directory. Pre-existing files in the working directory are left untouched;
+the \code{overwrite} flag only governs files that \code{project_setup()} itself generates.
 }

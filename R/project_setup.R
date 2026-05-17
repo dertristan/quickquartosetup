@@ -1,41 +1,32 @@
 #' Project Setup
 #'
-#' Initializes a new R project with a standardized folder structure and optional files
-#' for manuscripts, presentations, code, and data management.
-#'
-#' @param project_name A character string specifying the project name. This will be used to name the main project directory. Defaults to an empty string (`""`).
-#' @param target_path A character string specifying the path where the project should be created. You can specify a custom path; otherwise, the current working directory is used. Defaults to `"."`.
+#' Scaffolds a standardized research project folder structure (manuscript, presentation,
+#' code notebook, data folders, bibliography, `_quarto.yml`) directly into the current
+#' working directory. Pre-existing files in the working directory are left untouched;
+#' the `overwrite` flag only governs files that `project_setup()` itself generates.
 #'
 #' @param manuscript Logical. If `TRUE`, creates a Quarto manuscript file (`manuscript.qmd`). Defaults to `TRUE`.
-#' @param author A character string specifying the author's name. Included in manuscript, presentation, and code files. Defaults to `NULL`.
-#' @param institution A character string specifying the author's institution. Included in `manuscript.qmd`. Defaults to `NULL`.
-#' @param department A character string specifying the author's department or school. When `NULL`, no department line is rendered. Defaults to `NULL`.
-#' @param mail A character string specifying the author's email address. Included in `manuscript.qmd`. Defaults to `NULL`.
-#' @param student_id A character string specifying the student's ID. Included in `manuscript.qmd`. Defaults to `NULL`.
-#' @param title A character string specifying the working title of the project. Used in manuscript, presentation, and code files. Defaults to `NULL`.
-#' @param subtitle A character string specifying the subtitle of the project. Used in presentation and code files. Defaults to `NULL`.
+#' @param author A character string specifying the author's name. Used in the project-level `_quarto.yml`. Defaults to `NULL` (system username).
+#' @param mail A character string specifying the author's email address. When non-default, included as a footnote on the author. Defaults to `NULL`.
+#' @param student_id A character string specifying the student's ID. When non-default, included as a footnote on the author. Defaults to `NULL`.
+#' @param title A character string specifying the working title of the project. Used in manuscript and presentation. Defaults to `NULL`.
+#' @param subtitle A character string specifying the subtitle of the project. Used in manuscript and presentation. Defaults to `NULL`.
 #' @param title_page Logical. If `TRUE`, generates a native LaTeX title page (`title-page.tex`) included before the manuscript body. Defaults to `FALSE`.
-#' @param stat_decl Logical. If `TRUE`, adds a statutory declaration (e.g., for exam papers). Defaults to `FALSE`.
+#' @param stat_decl Logical. If `TRUE`, adds a bilingual (German/English) statutory declaration (e.g., for exam papers). Defaults to `FALSE`.
 #'
-#' @param presentation Logical. If `TRUE`, creates a Quarto Reveal.js presentation (`presentation.qmd`). Defaults to `TRUE`.
-#' @param uma_style Logical. If `TRUE`, generates a `theme.scss` and applies it to the presentation. Defaults to `FALSE`.
-#' @param theme_color A character string specifying a hex color used as the primary color in `theme.scss`. Only applies when `uma_style = TRUE`. Defaults to `"#333333"`.
+#' @param presentation Logical. If `TRUE`, creates a minimal Quarto Reveal.js presentation (`presentation.qmd`). Defaults to `TRUE`.
 #'
-#' @param code_files Logical. If `TRUE`, creates a code notebook file (`01_code.qmd`) for documentation. Defaults to `TRUE`.
-#' @param data_folders Logical. If `TRUE`, creates standard data subfolders (`raw`, `processed`, `final`). Defaults to `TRUE`.
+#' @param code_files Logical. If `TRUE`, creates a code notebook file (`code/01_code.qmd`). Defaults to `TRUE`.
+#' @param data_folders Logical. If `TRUE`, creates standard data subfolders (`01_raw`, `02_processed`, `03_final`). Defaults to `TRUE`.
 #' @param gitignore Logical. If `TRUE`, generates a `.gitignore` file. Defaults to `TRUE`.
-#' @param overwrite Logical. If `TRUE`, allows overwriting existing files or folders with the same names. Defaults to `TRUE`.
+#' @param overwrite Logical. If `TRUE`, allows overwriting files that `project_setup()` itself generates. Pre-existing user files are never touched. Defaults to `TRUE`.
 #'
 #' @export
 
 project_setup <- function(
-  project_name = "",
-  target_path = ".",
   # MANUSCRIPT SETUP OPTIONS
   manuscript = TRUE,
   author = NULL,
-  institution = NULL,
-  department = NULL,
   mail = NULL,
   student_id = NULL,
   title = NULL,
@@ -44,8 +35,6 @@ project_setup <- function(
   stat_decl = FALSE,
   # PRESENTATION SETUP OPTIONS
   presentation = TRUE,
-  uma_style = FALSE,
-  theme_color = "#333333",
   # Other logistics
   code_files = TRUE,
   data_folders = TRUE,
@@ -69,9 +58,6 @@ project_setup <- function(
     }
   }
 
-  if (is.null(institution)) {
-    institution <- "Your Institution"
-  }
   if (is.null(mail)) {
     mail <- "your.email@your.institution.com"
   }
@@ -86,7 +72,7 @@ project_setup <- function(
   }
 
   # --- Construct the 'author_with_details' string for the YAML header ---
-  # The goal is to build a string like: "Firstname Lastname^[Institution; Mail: email; student ID: id]"
+  # The goal is to build a string like: "Firstname Lastname^[Mail: email; Student ID: id]"
 
   # Check and convert student_id to character if necessary.
   if (!is.null(student_id) && !is.character(student_id)) {
@@ -95,7 +81,6 @@ project_setup <- function(
 
   # Build a vector of details strings only for non-default values.
   details <- c(
-    if (!is.null(institution) && institution != "Your Institution") institution,
     if (!is.null(mail) && mail != "your.email@your.institution.com") {
       paste0("Mail: ", mail)
     },
@@ -406,12 +391,6 @@ geometry:
 
   # Native LaTeX Title Page Snippet ----------------------------------------------
 
-  title_page_department_line <- if (!is.null(department)) {
-    paste0("{", department, "} \\par\n")
-  } else {
-    ""
-  }
-
   title_page_tex_content <- paste0(
     "\\begin{titlepage}\n",
     "\\centering\n",
@@ -423,9 +402,6 @@ geometry:
     "\\vspace{3cm}\n",
     "\n",
     "{\\large ", author_with_id, " \\par}\n",
-    "\\vspace{0.5cm}\n",
-    "{", institution, "} \\par\n",
-    title_page_department_line,
     "\n",
     "\\vfill\n",
     "\n",
@@ -553,249 +529,19 @@ message(paste(\"Document rendered in:\", round(as.numeric(rendering_time, units 
 
   # Presentation QMD -------------------------------------------------------------
 
-  quarto_presentation_content_default <- paste(
-    "---
-title: ",
-    title,
-    "
-subtitle: ",
-    subtitle,
-    "
-format:
-  revealjs:
-    embed-resources: true
-    slideNumber: true
-    footer: ",
-    author,
-    "  -- {{< meta date >}} -- ",
-    title,
-    "
-preview-links: true
----
-
-
-
-# Introduction
-
-## Motivation
-
-- Bullet point 1
-- more details @ [Quarto Revealjs Documentation](https://quarto.org/docs/presentations/revealjs/)
-
-------------------------------------------------------------------------
-
-## Relevance
-
-------------------------------------------------------------------------
-
-## Research Question
-
-# Theory
-
-## Prior Research
-
-------------------------------------------------------------------------
-
-## Theoretical Framework
-
-------------------------------------------------------------------------
-
-## Argument
-
-# Research Design
-
-------------------------------------------------------------------------
-
-## Data
-
-------------------------------------------------------------------------
-
-## Methods
-
-# Results
-
-------------------------------------------------------------------------
-
-## Results I
-
-------------------------------------------------------------------------
-
-## Results II
-
-# Conclusion
-
-------------------------------------------------------------------------
-
-## Summary
-
-------------------------------------------------------------------------
-
-## Implications
-
-# Thank you for your attention!
-
-------------------------------------------------------------------------
-
-## References
-"
-  )
-
-  quarto_presentation_content_uma <- paste(
-    "---
-title: ",
-    title,
-    "
-subtitle: ",
-    subtitle,
-    "
-format:
-  revealjs:
-    embed-resources: true
-    theme: theme.scss
-    slideNumber: true
-    footer: ",
-    author,
-    "  -- {{< meta date >}} -- ",
-    title,
-    "
-editor: visual
-preview-links: true
----
-
-##",
-    title,
-    "
-
-###",
-    subtitle,
-    "
-
-{{< meta author >}}<br>
-{{< meta date >}}
-
-# Introduction
-
-## Motivation
-
-- Bullet point 1
-- more details @ [Quarto Revealjs Documentation](https://quarto.org/docs/presentations/revealjs/)
-
-------------------------------------------------------------------------
-
-## Relevance
-
-------------------------------------------------------------------------
-
-## Research Question
-
-# Theory
-
-## Prior Research
-
-------------------------------------------------------------------------
-
-## Theoretical Framework
-
-------------------------------------------------------------------------
-
-## Argument
-
-# Research Design
-
-------------------------------------------------------------------------
-
-## Data
-
-------------------------------------------------------------------------
-
-## Methods
-
-# Results
-
-------------------------------------------------------------------------
-
-## Results I
-
-------------------------------------------------------------------------
-
-## Results II
-
-# Conclusion
-
-------------------------------------------------------------------------
-
-## Summary
-
-------------------------------------------------------------------------
-
-## Implications
-
-# Thank you for your attention!
-
-------------------------------------------------------------------------
-
-## References
-"
-  )
-
-  scss_content <- paste0(
-    "/*-- scss:defaults --*/
-$caption-background: ", theme_color, ";
-$main-background: white;
-$main-text: ", theme_color, ";
-$footnote-background: ", theme_color, ";
-$presentation-heading-color: ", theme_color, ";
-
-/*-- scss:rules --*/
-
-#title-slide {
-  .title {
-    color: ", theme_color, ";
-  }
-
-  .subtitle {
-    color: ", theme_color, ";
-  }
-
-  .quarto-title-author {
-    color: ", theme_color, ";
-  }
-
-  .quarto-title-date {
-    color: ", theme_color, ";
-  }
-}
-
-.reveal .slides > section > p, .reveal .slides > section > section > p {
-    color: $main-text;
-}
-
-.reveal .slide-number {
-    background-color: $footnote-background;
-    color: $main-text;
-    bottom: 14px !important;
-    right: 50px !important;
-    top: unset !important;
-}
-
-.reveal .footer {
-    background-color: $main-background;
-    color: $main-text;
-}
-
-/* Custom color for author and date */
-.quarto-author, .quarto-date {
-  color: ", theme_color, ";
-}
-
-/* Custom link and list styles */
-.reveal a {
-  color: ", theme_color, ";
-}
-.reveal li {
-  color: ", theme_color, ";
-}
-"
+  quarto_presentation_content_default <- paste0(
+    "---\n",
+    "title: \"", title, "\"\n",
+    "subtitle: \"", subtitle, "\"\n",
+    "format:\n",
+    "  revealjs:\n",
+    "    embed-resources: true\n",
+    "---\n",
+    "\n",
+    "## Overview\n",
+    "\n",
+    "- First point\n",
+    "- Second point\n"
   )
 
   # Project-level _quarto.yml ----------------------------------------------------
@@ -908,36 +654,12 @@ Thumbs.db
 
   # Presentation files
   if (presentation) {
-    if (uma_style) {
-      message("\nCreating UMA style presentation qmd...")
-      content_tmp <- quarto_presentation_content_uma
-
-      # presentation qmd
-      create_file_with_content(
-        file_path = "presentation.qmd",
-        content = content_tmp,
-        overwrite = overwrite
-      )
-
-      # theme.scss
-      create_file_with_content(
-        file_path = "theme.scss",
-        content = scss_content,
-        overwrite = overwrite
-      )
-    }
-
-    if (!(uma_style)) {
-      message("\nCreating presentation qmd...")
-      content_tmp <- quarto_presentation_content_default
-
-      # presentation qmd
-      create_file_with_content(
-        file_path = "presentation.qmd",
-        content = content_tmp,
-        overwrite = overwrite
-      )
-    }
+    message("\nCreating presentation qmd...")
+    create_file_with_content(
+      file_path = "presentation.qmd",
+      content = quarto_presentation_content_default,
+      overwrite = overwrite
+    )
   }
 
   # .gitignore file

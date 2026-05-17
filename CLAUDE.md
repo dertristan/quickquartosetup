@@ -2,9 +2,11 @@
 
 ## What this project is
 
-`quickquartosetup` is a lightweight R package (v0.0.0.9000, MIT) authored by Tristan Muno. Its single purpose: one call to `project_setup()` spins up a complete, opinionated research project folder with Quarto template files ready to render.
+`quickquartosetup` is a lightweight R package (v0.0.0.9000, MIT) authored by Tristan Muno. Its single purpose: one call to `project_setup()` scaffolds an opinionated set of Quarto template files into the **current working directory** — leaving any pre-existing files (cloned datasets, READMEs, etc.) untouched.
 
 It started as a personal tool and is now being refined as a course companion for **QMIR – Quantitative Methods in International Relations and European Politics** at the University of Mannheim. The guiding design principle is **minimalism and low dependencies**, to keep it easy for students using R + Quarto + Git/GitHub in Positron.
+
+The intended workflow: a student clones an exam repository (already containing a dataset and a README), navigates into the folder, and calls `project_setup()` to scaffold their working files in place.
 
 ---
 
@@ -38,72 +40,72 @@ Single exported function. All template content is defined as inline strings insi
 
 | Parameter | Default | Purpose |
 |---|---|---|
-| `project_name` | `""` (required) | Name of the new project folder |
-| `target_path` | `"."` | Where to create the project |
 | `manuscript` | `TRUE` | Generate `manuscript.qmd` (plain `pdf` format) |
-| `presentation` | `TRUE` | Generate `presentation.qmd` (Reveal.js) |
-| `code_files` | `TRUE` | Generate `code/01_code.qmd` (HTML notebook) |
+| `presentation` | `TRUE` | Generate a minimal `presentation.qmd` (Reveal.js) |
+| `code_files` | `TRUE` | Generate `code/00_code_template.qmd` (HTML, copy-and-rename template) |
 | `data_folders` | `TRUE` | Create `data/01_raw`, `02_processed`, `03_final` |
 | `gitignore` | `TRUE` | Generate `.gitignore` |
-| `author` | system username | Populates project-level YAML metadata |
-| `institution` | `"Your Institution"` | Manuscript/code YAML |
-| `department` | `NULL` | Adds department line to code-notebook affiliations and the native title page when set |
-| `mail` | placeholder | Manuscript/code YAML |
-| `student_id` | `"1234567"` | Added to author line if non-default |
+| `author` | system username | Populates `_quarto.yml` (with optional footnote from `mail` / `student_id`) |
+| `mail` | placeholder | When non-default, added as `Mail: …` footnote on the author |
+| `student_id` | `"1234567"` | When non-default, added as `Student ID: …` footnote on the author |
 | `title` / `subtitle` | `"Untitled Project"` / `"A great project"` | YAML metadata |
 | `title_page` | `FALSE` | Generate `title-page.tex` and include it via `include-before-body` |
 | `stat_decl` | `FALSE` | Append German/English statutory declaration |
-| `uma_style` | `FALSE` | Generate `theme.scss` and apply it to the Reveal.js presentation |
-| `theme_color` | `"#333333"` | Primary color injected into `theme.scss` (applies when `uma_style = TRUE`) |
-| `overwrite` | `TRUE` | Whether to overwrite existing files |
+| `overwrite` | `TRUE` | Whether to overwrite files `project_setup()` itself generates (pre-existing user files are never touched) |
 
 ### Generated project structure
 
+The scaffold is written into the **current working directory** — there is no wrapping project folder.
+
 ```
-project_name/
-├── _quarto.yml             # Project-level metadata shared across documents
-├── code/01_code.qmd        # HTML notebook (file-level echo: true override)
+.
+├── _quarto.yml                    # Project-level metadata shared across documents (author, date, bibliography, execute defaults)
+├── code/00_code_template.qmd      # HTML code template — students copy and rename for each analysis
 ├── data/01_raw/
 ├── data/02_processed/
 ├── data/03_final/
-├── manuscript.qmd          # Plain PDF manuscript (default or titlepage variant)
-├── title-page.tex          # Only when title_page = TRUE
-├── presentation.qmd        # Reveal.js slides
-├── theme.scss              # Only when uma_style = TRUE; uses theme_color
-├── references.bib          # BibTeX starter entries
+├── manuscript.qmd                 # Plain PDF manuscript (default or titlepage variant)
+├── title-page.tex                 # Only when title_page = TRUE
+├── presentation.qmd               # Minimal Reveal.js deck (auto title slide + one content slide)
+├── references.bib                 # BibTeX starter entries
 └── .gitignore
 ```
 
 ### Manuscript variants (chosen by flag combination)
 
-- Default: plain `pdf` format with `author_with_details` footnote (institution/mail/ID)
+- Default: plain `pdf` format; the author (with its optional `Mail` / `Student ID` footnote) is inherited from `_quarto.yml`
 - `title_page = TRUE`: plain `pdf` format with `include-before-body: title-page.tex`; the title page is rendered from a small native LaTeX snippet (no Quarto extensions involved)
 - Any + `stat_decl = TRUE`: appends bilingual (German/English) statutory declaration
 
-Shared YAML metadata (author, date, bibliography, biblio-style, link-citations, execute defaults) lives in `_quarto.yml` and is inherited by every document. Per-file YAML now only carries format-specific keys and intentional overrides (e.g. the manuscript's `author_with_details` footnote and the code notebook's `echo: true`).
+Shared YAML metadata (author with optional footnote, date, bibliography, biblio-style, link-citations, execute defaults) lives in `_quarto.yml` and is inherited by every document. Per-file YAML now only carries format-specific keys and intentional overrides (e.g. the code notebook's `echo: true`). Note: the LaTeX `^[…]` footnote syntax in the author string does not render cleanly in the HTML code template — this is an accepted trade-off, since the PDF manuscript is the primary document.
 
 ### Internal helpers (defined inside `project_setup()`)
 
 - `create_folder(folder_path)` — idempotent `dir.create(recursive = TRUE)`
 - `create_file_with_content(file_path, content, overwrite)` — writes text with overwrite logic
-- `copy_items(source_paths, dest_folder, overwrite)` — copies files/folders from `inst/`
 
 ---
 
 ## Active development direction
 
-Items 1–3 of the QMIR-course simplification roadmap are complete:
+Rounds one and two of the QMIR-course simplification roadmap are complete:
 
 1. ~~**Remove Quarto extension dependencies**~~ — title page is now native; wordcount has been removed
-2. ~~**Make templates institution-agnostic**~~ — UMA branding and logos removed; `department` and `theme_color` parameters added
+2. ~~**Make templates institution-agnostic**~~ — UMA branding and logos removed
 3. ~~**Central YAML metadata file**~~ — shared keys live in `_quarto.yml`
+4. ~~**In-place scaffolding**~~ — `project_setup()` writes into the current working directory rather than creating a subfolder
+5. ~~**Slim the signature**~~ — removed `project_name`, `target_path`, `institution`, `department`, `uma_style`, `theme_color`; stripped `theme.scss` and the UMA presentation variant
+6. ~~**Author in `_quarto.yml`**~~ — the author field (with optional mail/student-id footnote) is no longer duplicated in `manuscript.qmd`
+7. ~~**Reusable code template**~~ — `code/01_code.qmd` renamed to `code/00_code_template.qmd` with copy-and-rename guidance baked in
+8. ~~**Quarto getting-started links**~~ — every generated document carries a visible link to the relevant Quarto docs page
 
 Remaining work:
 
-4. **German language support**
-5. **Commented Quarto examples** in generated files (citations, figures, tables, cross-references)
-6. **Optional helper scripts**
-7. Fix installation warnings (license pointer in DESCRIPTION, non-ASCII in `R/project_setup.R`, pre-rendered vignette outputs)
+9. **German language support**
+10. **Commented Quarto examples** in generated files (citations, figures, tables, cross-references)
+11. **Optional helper scripts**
+12. **Update the introduction vignette** to match the simplified signature (its example chunks are currently marked `eval = FALSE` as a stopgap)
+13. Fix installation warnings (license pointer in DESCRIPTION, non-ASCII in `R/project_setup.R`, pre-rendered vignette outputs)
 
 ---
 
@@ -119,11 +121,11 @@ Remaining work:
 
 ## Implementation strategies for the QMIR course roadmap
 
-These are design notes for translating the remaining roadmap items into concrete changes. Items 1–3 have been completed; see the commit history (`Remove wordcount and titlepage extension dependencies`, `Make templates institution-agnostic`, `Centralize shared YAML metadata into _quarto.yml`) for what landed.
+These are design notes for translating the remaining roadmap items into concrete changes. Items 1–8 have been completed; see the commit history for what landed.
 
 ---
 
-### 4. German language support
+### 9. German language support
 
 **The problem**: Quarto outputs labels like "Figure", "Table", "References" in English by default.
 
@@ -136,7 +138,7 @@ These are design notes for translating the remaining roadmap items into concrete
 
 ---
 
-### 5. Commented Quarto examples in generated files
+### 10. Commented Quarto examples in generated files
 
 **The problem**: Students new to Quarto don't know how to add citations, figures, tables, or cross-references in the manuscript template.
 
@@ -154,14 +156,14 @@ These are design notes for translating the remaining roadmap items into concrete
 
 ---
 
-### 6. Optional helper scripts
+### 11. Optional helper scripts
 
 **The problem**: Students repeatedly write the same boilerplate for loading packages, setting paths with `here`, and checking/installing dependencies.
 
 **Strategy**:
 - Add a `helper_scripts = FALSE` parameter
 - When `TRUE`, generate `R/helpers.R` (or `code/helpers.R`) with:
-  - A `load_packages()` wrapper that checks, installs, and loads a vector of packages (the pattern already used in `01_code.qmd`'s setup chunk, extracted as a reusable function)
+  - A `load_packages()` wrapper that checks, installs, and loads a vector of packages (the pattern already used in the setup chunk of `00_code_template.qmd`, extracted as a reusable function)
   - A commented block showing `here::here()` usage for cross-platform paths
 - Keep the script minimal — 30–40 lines — and fully commented for students
 
@@ -169,7 +171,7 @@ These are design notes for translating the remaining roadmap items into concrete
 
 ### Architectural consideration: template strings vs. file-based templates
 
-**Current approach**: all content lives as `paste0()` multi-line strings inside `project_setup()`. This is self-contained but makes the function ~1,200 lines and hard to read/edit.
+**Current approach**: all content lives as `paste0()` multi-line strings inside `project_setup()`. This is self-contained but still makes the function ~700 lines and harder to edit than a plain `.qmd` file.
 
 **Alternative worth considering**: move templates to `inst/templates/*.qmd` files with `{{{placeholder}}}` markers and use `whisker::whisker.render()` for substitution (or just `gsub()` without adding a dependency). This would:
 - Make template editing much easier (edit a real `.qmd` file, not a string inside R code)

@@ -13,13 +13,12 @@ Whether you're writing a manuscript, preparing a presentation, or organizing you
 
 ## ✨ Features
 
-- **One command, full setup** – Create a ready-to-use project structure with `project_setup()`.
-- **Built-in Quarto integration** – Automatically generates `.qmd` files for manuscripts, presentations, and notebooks.
-- **Custom metadata** – Add title, subtitle, author, institution, department, and more right at setup.
-- **Centralized project metadata** – A single `_quarto.yml` defines shared metadata (author, date, bibliography, execute defaults) for every document.
-- **Student-ready options** – Include a bilingual (German/English) statutory declaration and student IDs for term papers.
+- **One command, in-place scaffolding** – Call `project_setup()` from inside your project folder and the package writes its files directly into the current working directory. Existing files (cloned dataset, README, etc.) are left untouched.
+- **Built-in Quarto integration** – Generates `.qmd` files for the manuscript, presentation, and code template, plus a `references.bib` and a `.gitignore`.
+- **Centralized project metadata** – A single `_quarto.yml` defines the shared author/date/bibliography/execute defaults for every document.
+- **Student-ready options** – Include a bilingual (German/English) statutory declaration and a student ID footnote for term papers.
 - **Native title page** – Optional `title-page.tex` included before the manuscript body. No Quarto extensions required.
-- **Customizable presentation theme** – Optional `theme.scss` for Reveal.js, with the primary color controlled by a single `theme_color` parameter.
+- **Quarto getting-started links** – Each generated document carries a link to the relevant Quarto documentation page, so students can quickly find help.
 
 ---
 
@@ -36,42 +35,44 @@ remotes::install_github("dertristan/quickquartosetup", build_vignettes = TRUE)
 
 ## 🚀 Usage
 
-The core function is `project_setup()`.
+The core function is `project_setup()`. The intended workflow: clone or `cd` into the folder where your project lives (e.g. an exam repository containing a dataset and a README), then call `project_setup()`. The function writes its scaffold into the current working directory and never touches files it didn't generate itself.
 
 **Basic example**:
 
 ```r
 library(quickquartosetup)
 
-# Create a new project with default settings
-project_setup(project_name = "my_new_project")
+# From inside the project folder
+project_setup()
 ```
 
-This creates a project folder with:
+This scaffolds:
 
 - `_quarto.yml` – project-level metadata (author, date, bibliography, execute defaults) shared across documents
 - `manuscript.qmd` – main manuscript
-- `presentation.qmd` – linked presentation
-- `01_code.qmd` – reproducible code notebook
-- `data` folder – with raw, processed, and final subfolders
+- `presentation.qmd` – minimal Reveal.js presentation
+- `code/00_code_template.qmd` – copy-and-rename code template for each analysis
+- `data/` – with `01_raw`, `02_processed`, and `03_final` subfolders
 - `references.bib` – shared bibliography
+- `.gitignore`
 
-When `title_page = TRUE` a native `title-page.tex` snippet is added and pulled in via `include-before-body`. When `uma_style = TRUE` a `theme.scss` is generated for the Reveal.js presentation.
+When `title_page = TRUE` a native `title-page.tex` snippet is added and pulled in via `include-before-body`.
 
 **Project structure (defaults)**:
 
 ```text
-my_new_project
+.
 ├── _quarto.yml
 ├── code
-│   └── 01_code.qmd
+│   └── 00_code_template.qmd
 ├── data
 │   ├── 01_raw
 │   ├── 02_processed
 │   └── 03_final
 ├── manuscript.qmd
 ├── presentation.qmd
-└── references.bib
+├── references.bib
+└── .gitignore
 ```
 
 The setup keeps data, code, and outputs clearly separated -- making it easy to embed computed results directly into manuscripts or presentations using [Quarto's embedding feature](https://quarto.org/docs/authoring/notebook-embed.html).
@@ -82,17 +83,15 @@ The setup keeps data, code, and outputs clearly separated -- making it easy to e
 
 ```r
 project_setup(
-  project_name = "my_other_project",
   author = "Bilbo Baggins",
   title = "There and Back Again",
   subtitle = "A Hobbit's Holiday",
-  institution = "Hobbiton Academy of Sciences",
   student_id = 3791,
   stat_decl = TRUE
 )
 ```
 
-Here's a preview of the rendered manuscript and presentation based on the function call above:
+Here's a preview of the rendered manuscript and presentation based on an earlier configuration:
 
 <p align="center">
   <a href="https://github.com/dertristan/quickquartosetup/blob/main/vignettes/my-other-project-rendered-manuscript.pdf">
@@ -120,27 +119,29 @@ Earlier versions of the package bundled the [Quarto wordcount extension](https:/
 ### Core simplification (QMIR course focus)
 - [x] Remove Quarto extension dependencies (wordcount, titlepages) — title page implemented natively
 - [x] Remove institution-specific branding (logos, university-specific files) — templates are now generic and institution-agnostic
-- [ ] Streamline default project structure to match the QMIR course workflow (R + Quarto + Git/GitHub in Positron)
+- [x] Streamline default project structure to match the QMIR course workflow (R + Quarto + Git/GitHub in Positron) — `project_setup()` now scaffolds in-place
 
 ### Manuscript & output options
 - [x] Consistent default templates for manuscript (with and without title page) and presentation
 - [x] Native title page implementation without external extension
-- [ ] Improve `theme.scss` for Reveal.js presentations
 - [x] Statutory declaration as standalone, institution-agnostic template
 
 ### Metadata & configuration
 - [x] Create one central YAML metadata file for all project documents
+- [x] Move the author field (with optional mail/student-id footnote) into `_quarto.yml`
 - [ ] Language support — starting with **German** (for humanities workflows)
 - [ ] Edit default PDF to include all academic metadata
 
 ### Quarto learning content
+- [x] Add Quarto getting-started links to each generated file
+- [x] Reframe the code notebook as a copy-and-rename template (`code/00_code_template.qmd`)
 - [ ] Include commented examples for common Quarto features: citations, figures, tables, equations, cross-references
 - [ ] Optional helper scripts for common tasks
 - [ ] Multibib option for separate primary and secondary references
-- [ ] Custom title page for students
 
 ### Technical
-- [ ] Fix installation warnings
+- [ ] Fix installation warnings (license pointer, non-ASCII chars in `R/project_setup.R`, vignette artifacts)
+- [ ] Update the introduction vignette to match the simplified signature
 - [ ] Option for initializing `.Rproj` files on the fly
 - [ ] Add prerequisites to the installation guide
 

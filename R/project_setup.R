@@ -224,6 +224,8 @@ geometry:
   - footskip = 20pt
 ---
 
+> See [Quarto authoring with Positron](https://quarto.org/docs/get-started/authoring/positron.html) for help with manuscript authoring.
+
 ## Introduction {#sec-introduction}
 
 {{< lipsum 2 >}}
@@ -348,6 +350,8 @@ geometry:
   - footskip = 20pt
 ---
 
+> See [Quarto authoring with Positron](https://quarto.org/docs/get-started/authoring/positron.html) for help with manuscript authoring.
+
 ## Introduction {#sec-introduction}
 
 {{< lipsum 2 >}}
@@ -461,6 +465,8 @@ execute:
   message: true
 ---
 
+> See [Quarto computations with Positron](https://quarto.org/docs/get-started/computations/positron.html) for help with code and computations.
+
 > Copy this file and rename it (e.g. `01_descriptives.qmd`) for each analysis you do.
 
 # Setup
@@ -535,6 +541,8 @@ message(paste(\"Computation completed in:\", round(as.numeric(computation_time, 
     "  revealjs:\n",
     "    embed-resources: true\n",
     "---\n",
+    "\n",
+    "> See the [Quarto Reveal.js documentation](https://quarto.org/docs/presentations/revealjs/) for help with slide authoring.\n",
     "\n",
     "## Overview\n",
     "\n",

@@ -53,37 +53,8 @@ project_setup <- function(
   overwrite = TRUE
 ) {
   # --------------------------------------------------------------------------
-  # 1. Input Validation and Argument Checks
+  # 1. Argument Defaults
   # --------------------------------------------------------------------------
-
-  # Ensure a project name is a non-empty character string.
-  stopifnot(
-    "You must provide a 'project_name'." = project_name != "",
-    "The 'project_name' must be a character string." = is.character(
-      project_name
-    )
-  )
-
-  # Check for whitespace or disallowed special characters in project_name
-  if (grepl("[^A-Za-z0-9_.]", project_name)) {
-    warning(
-      "The 'project_name' contains disallowed characters. ",
-      "It is recommended to use only letters, numbers, underscores (_), or dots (.) for folder names."
-    )
-  }
-
-  # Construct the full project path.
-  full_project_path <- file.path(target_path, project_name)
-
-  # Check if the project directory already exists and if overwriting is disallowed.
-  if (dir.exists(full_project_path) && !overwrite) {
-    stop(
-      "Project directory '",
-      full_project_path,
-      "' already exists. ",
-      "Set `overwrite = TRUE` to continue (files may be overwritten)."
-    )
-  }
 
   # Handle NULL values for metadata by providing sensible defaults.
   # Get the system username for 'author'. We check multiple environment variables
@@ -222,72 +193,11 @@ project_setup <- function(
     invisible(NULL) # Return invisible NULL as this function is for side effects
   }
 
-  ## Copy Files or Folders to a Destination Folder
-  ##
-  ## This helper function copies a set of source items (files or folders) to a
-  ## specified destination folder. It first ensures the destination folder exists.
-  ## It handles cases where source items are missing and respects the `overwrite`
-  ## flag for existing destination items.
-  ##
-  ## @param source_paths A character vector of full paths to the source files or
-  ##   folders to be copied.
-  ## @param dest_folder A character string specifying the path to the destination folder.
-  ## @param overwrite A logical value. If `TRUE`, existing files/folders in the
-  ##   destination with the same name will be overwritten. If `FALSE`, they will
-  ##   not be copied.
-  ## @return Invisible `NULL`. Called for its side effects (item copying and messages).
-  copy_items <- function(source_paths, dest_folder, overwrite) {
-    message("Starting copy_items function.")
-    message(paste("Source paths:", paste(source_paths, collapse = ", ")))
-    message(paste("Destination folder:", dest_folder))
-
-    # Check if the destination folder exists, create if not
-    if (!dir.exists(dest_folder)) {
-      message(paste(
-        "Destination folder does not exist. Creating:",
-        dest_folder
-      ))
-      dir.create(dest_folder, recursive = TRUE)
-    } else {
-      message(paste("Destination folder already exists:", dest_folder))
-    }
-
-    # Iterate over each source path
-    for (src in source_paths) {
-      message(paste("Processing source item:", src))
-
-      # Check if the source path exists
-      if (!file.exists(src)) {
-        warning(paste("Source item missing:", src))
-        message(paste("Skipping missing item:", src))
-        next
-      }
-
-      # Use file.copy with the destination folder as the 'to' argument
-      message(paste("Copying from:", src, "to:", dest_folder))
-      file.copy(
-        from = src,
-        to = dest_folder,
-        recursive = TRUE,
-        overwrite = overwrite
-      )
-      message(paste("Copy of", src, "complete."))
-    }
-    message("copy_items function finished.")
-  }
-
   ### --------------------------------------------------------------------------
-  ### 3. Project Directory Creation and Scoping
+  ### 3. Project Setup Initialization
   ### --------------------------------------------------------------------------
 
-  message("\nStarting project setup for '", project_name, "'.")
-  dir.create(full_project_path, recursive = TRUE, showWarnings = FALSE)
-  message("Created project directory at: '", full_project_path, "'")
-
-  # Store the original working directory and set a return hook
-  old_wd <- getwd()
-  on.exit(setwd(old_wd))
-  setwd(full_project_path)
+  message("\nStarting project setup in: '", getwd(), "'.")
 
   ### --------------------------------------------------------------------------
   ### 5. Define All File Content Strings

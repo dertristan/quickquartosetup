@@ -36,8 +36,8 @@ library(quickquartosetup)
 
 The package's core functionality is provided by a single main function: `project_setup()`. The only required argument is `project_name`, which determines the name of the parent directory that will be created.
 
-```{r project-setup-minimal}
-project_setup(project_name = "my_new_project")
+```{r project-setup-minimal, eval=FALSE}
+project_setup()
 ```
 
 Running this command generates a complete project folder structure using the default settings. By default, the function creates three Quarto markdown files:
@@ -52,15 +52,13 @@ This structure is designed to support an integrated scientific workflow, allowin
 
 You can customize the project setup by providing additional arguments, such as a working title, subtitle, author name, and institutional affiliation. The `student_id` argument allows students to include their university ID, and setting `stat_decl = TRUE` adds a statutory declaration -- commonly required in student term papers.
 
-```{r project-setup-custom}
+```{r project-setup-custom, eval=FALSE}
 project_setup(
-  project_name = "my_other_project",
   author = "Bilbo Baggins",
   title = "There and Back Again",
   subtitle = "A Hobbit's Holiday",
-  institution = "Hobbiton Academy of Sciences",
   student_id = 3791,
-  stat_decl = T
+  stat_decl = TRUE
 )
 ```
 
@@ -71,16 +69,14 @@ This package is currently tailored for students and scholars at the University o
 
 Many German universities require a traditional title page for examination term papers. The `title_page` argument enables this option. When set to `TRUE`, a title page will be added to the PDF manuscript using the [Quarto Title Pages extension](https://nmfs-opensci.github.io/quarto_titlepages/)
 
-```{r project-setup-title-page}
+```{r project-setup-title-page, eval=FALSE}
 project_setup(
-  project_name = "my_last_project",
   author = "Bilbo Baggins",
   title = "There and Back Again",
   subtitle = "A Hobbit's Holiday",
-  institution = "Hobbiton Academy of Sciences",
   student_id = 3791,
-  title_page = T,
-  stat_decl = T
+  title_page = TRUE,
+  stat_decl = TRUE
 )
 ```
 

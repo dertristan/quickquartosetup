@@ -15,12 +15,9 @@ project_setup(
   title = NULL,
   subtitle = NULL,
   title_page = FALSE,
-  logo = FALSE,
   stat_decl = FALSE,
   presentation = TRUE,
   uma_style = TRUE,
-  title_image_path = "./images/uma_palace.png",
-  logo_path = "./images/uma_ss.png",
   code_files = TRUE,
   data_folders = TRUE,
   gitignore = TRUE,
@@ -46,19 +43,13 @@ project_setup(
 
 \item{subtitle}{A character string specifying the subtitle of the project. Used in presentation and code files. Defaults to \code{NULL}.}
 
-\item{title_page}{Logical. If \code{TRUE}, generates a dedicated title page using the Quarto \code{titlepages} extension. Defaults to \code{FALSE}.}
-
-\item{logo}{Logical. If \code{TRUE}, includes a logo on the manuscript. Only applies if \code{title_page = TRUE}. Defaults to \code{FALSE}.}
+\item{title_page}{Logical. If \code{TRUE}, generates a native LaTeX title page (\code{title-page.tex}) included before the manuscript body. Defaults to \code{FALSE}.}
 
 \item{stat_decl}{Logical. If \code{TRUE}, adds a statutory declaration (e.g., for exam papers). Defaults to \code{FALSE}.}
 
 \item{presentation}{Logical. If \code{TRUE}, creates a Quarto Reveal.js presentation (\code{presentation.qmd}). Defaults to \code{TRUE}.}
 
-\item{uma_style}{Logical. If \code{TRUE}, applies a custom University of Mannheim style, including SCSS theme, logo, and title image. Defaults to \code{TRUE}.}
-
-\item{title_image_path}{A character string specifying the path to the presentation's title image. Defaults to \code{"./images/uma_palace.png"}.}
-
-\item{logo_path}{A character string specifying the path to the logo used in manuscript or presentation. Defaults to \code{"./images/uma_ss.png"}.}
+\item{uma_style}{Logical. If \code{TRUE}, generates a \code{theme.scss} and applies it to the presentation. Defaults to \code{TRUE}.}
 
 \item{code_files}{Logical. If \code{TRUE}, creates a code notebook file (\verb{01_code.qmd}) for documentation. Defaults to \code{TRUE}.}
 

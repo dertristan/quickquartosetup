@@ -13,14 +13,11 @@
 #' @param student_id A character string specifying the student's ID. Included in `manuscript.qmd`. Defaults to `NULL`.
 #' @param title A character string specifying the working title of the project. Used in manuscript, presentation, and code files. Defaults to `NULL`.
 #' @param subtitle A character string specifying the subtitle of the project. Used in presentation and code files. Defaults to `NULL`.
-#' @param title_page Logical. If `TRUE`, generates a dedicated title page using the Quarto `titlepages` extension. Defaults to `FALSE`.
-#' @param logo Logical. If `TRUE`, includes a logo on the manuscript. Only applies if `title_page = TRUE`. Defaults to `FALSE`.
+#' @param title_page Logical. If `TRUE`, generates a native LaTeX title page (`title-page.tex`) included before the manuscript body. Defaults to `FALSE`.
 #' @param stat_decl Logical. If `TRUE`, adds a statutory declaration (e.g., for exam papers). Defaults to `FALSE`.
 #'
 #' @param presentation Logical. If `TRUE`, creates a Quarto Reveal.js presentation (`presentation.qmd`). Defaults to `TRUE`.
-#' @param uma_style Logical. If `TRUE`, applies a custom University of Mannheim style, including SCSS theme, logo, and title image. Defaults to `TRUE`.
-#' @param title_image_path A character string specifying the path to the presentation's title image. Defaults to `"./images/uma_palace.png"`.
-#' @param logo_path A character string specifying the path to the logo used in manuscript or presentation. Defaults to `"./images/uma_ss.png"`.
+#' @param uma_style Logical. If `TRUE`, generates a `theme.scss` and applies it to the presentation. Defaults to `TRUE`.
 #'
 #' @param code_files Logical. If `TRUE`, creates a code notebook file (`01_code.qmd`) for documentation. Defaults to `TRUE`.
 #' @param data_folders Logical. If `TRUE`, creates standard data subfolders (`raw`, `processed`, `final`). Defaults to `TRUE`.
@@ -41,13 +38,10 @@ project_setup <- function(
   title = NULL,
   subtitle = NULL,
   title_page = FALSE,
-  logo = FALSE,
   stat_decl = FALSE,
   # PRESENTATION SETUP OPTIONS
   presentation = TRUE,
   uma_style = TRUE,
-  title_image_path = "./images/uma_palace.png",
-  logo_path = "./images/uma_ss.png",
   # Other logistics
   code_files = TRUE,
   data_folders = TRUE,
@@ -155,26 +149,6 @@ project_setup <- function(
   } else {
     # If no non-default student ID was provided, just use the author's name.
     author_with_id <- author
-  }
-
-  # Check for the existence of template images if presentation is TRUE
-  # and the UMA style is requested.
-  if (presentation && uma_style) {
-    # Check if each source files can be found.
-    image_files_exists <- file.exists(system.file(
-      "images",
-      package = "quickquartosetup"
-    ))
-
-    if (!image_files_exists) {
-      # If any images are missing, throw a warning and disable the UMA style.
-      warning(
-        "Logo or Title Image File not found for UMA style. ",
-        "Presentation will still be created, but without the UMA style templates."
-      )
-      # Set uma_style to FALSE to prevent the function from trying to copy them later.
-      uma_style <- FALSE
-    }
   }
 
   # --------------------------------------------------------------------------
@@ -334,11 +308,12 @@ author: \"",
     "\"",
     "
 thanks: |
-   You can add acknowledgements here. Wordcount: {{< words-body >}}.
+   You can add acknowledgements here.
 date: last-modified
 date-format: MMMM D, YYYY
 format:
-  wordcount-pdf:
+  pdf:
+    keep-tex: false
     toc: false
     include-in-header:
       text: |
@@ -466,32 +441,15 @@ subtitle: |
     "
 abstract: |
   You can add an abstract here.
-author:
-  - name: ",
-    author_with_id,
-    "
-    email: ",
-    mail,
-    "
-    affiliations:
-      - name: ",
-    institution,
-    "
-        department: School of Social Sciences
 thanks: |
-   You can add acknowledgements here. Wordcount: {{< words-body >}}.
+   You can add acknowledgements here.
 date: last-modified
 date-format: MMMM D, YYYY
 format:
-  titlepage-pdf:
-    citeproc: false
-    filters:
-      - at: pre-quarto
-        path: _extensions/andrewheiss/wordcount/citeproc.lua
-      - at: pre-quarto
-        path: _extensions/andrewheiss/wordcount/wordcount.lua
-    titlepage: academic
+  pdf:
+    keep-tex: false
     toc: false
+    include-before-body: title-page.tex
     include-in-header:
       text: |
         \\usepackage{setspace}
@@ -554,109 +512,26 @@ geometry:
     stat_decl_content
   )
 
-  # PDF Manuscript with Title Page and Logo --------------------------------------
+  # Native LaTeX Title Page Snippet ----------------------------------------------
 
-  quarto_manuscript_content_titlepage_logo <- paste0(
-    "---
-title: |
-  ",
-    title,
-    "
-subtitle: |
-  ",
-    subtitle,
-    "
-abstract: |
-  You can add an abstract here.
-author:
-  - name: ",
-    author_with_id,
-    "
-    email: ",
-    mail,
-    "
-    affiliations:
-      - name: ",
-    institution,
-    "
-        department: School of Social Sciences
-thanks: |
-   You can add acknowledgements here. Wordcount: {{< words-body >}}.
-date: last-modified
-date-format: MMMM D, YYYY
-format:
-  titlepage-pdf:
-    citeproc: false
-    filters:
-      - at: pre-quarto
-        path: _extensions/andrewheiss/wordcount/citeproc.lua
-      - at: pre-quarto
-        path: _extensions/andrewheiss/wordcount/wordcount.lua
-    titlepage: academic
-    titlepage-logo: ",
-    logo_path,
-    "
-    toc: false
-    include-in-header:
-      text: |
-        \\usepackage{setspace}
-        \\setlength{\\parindent}{15pt}
-execute:
-  echo: false
-  warning: false
-  eval: true
-  include: true
-  cache: true
-bibliography: references.bib
-biblio-style: apsr
-link-citations: true
-number-sections: true
-papersize: a4
-fontsize: 12pt
-linestretch: 2
-geometry:
-  - top = 2cm
-  - bottom = 2cm
-  - left = 2.5cm
-  - right = 2.5cm
-  - footskip = 20pt
----
-
-## Introduction {#sec-introduction}
-
-{{< lipsum 2 >}}
-
-## Theory {#sec-theory}
-
-{{< lipsum 2 >}}
-
-## Research Design {#sec-design}
-
-{{< lipsum 2 >}}
-
-## Empirical Analysis {#sec-analysis}
-
-{{< lipsum 2 >}}
-
-## Conclusion {#sec-conclusion}
-
-{{< lipsum 2 >}}
-
-\\singlespacing
-
-## References
-
-::: {#refs}
-:::
-
-## Appendix {.appendix}
-
-"
-  )
-
-  quarto_manuscript_content_titlepage_logo_statutory_decl <- paste0(
-    quarto_manuscript_content_titlepage_logo,
-    stat_decl_content
+  title_page_tex_content <- paste0(
+    "\\begin{titlepage}\n",
+    "\\centering\n",
+    "\\vspace*{2cm}\n",
+    "\n",
+    "{\\LARGE \\bfseries ", title, " \\par}\n",
+    "\\vspace{1cm}\n",
+    "{\\Large ", subtitle, " \\par}\n",
+    "\\vspace{3cm}\n",
+    "\n",
+    "{\\large ", author_with_id, " \\par}\n",
+    "\\vspace{0.5cm}\n",
+    "{", institution, "} \\par\n",
+    "\n",
+    "\\vfill\n",
+    "\n",
+    "{\\today}\n",
+    "\\end{titlepage}\n"
   )
 
   # References Bibtex File -------------------------------------------------------
@@ -906,9 +781,6 @@ format:
     "  -- {{< meta date >}} -- ",
     title,
     "
-    logo: ",
-    logo_path,
-    "
 editor: visual
 preview-links: true
 ---
@@ -921,9 +793,6 @@ preview-links: true
     subtitle,
     "
 
-![](",
-    title_image_path,
-    "){width=\"100%\"}
 {{< meta author >}}<br>
 {{< meta date >}}
 
@@ -1124,40 +993,19 @@ Thumbs.db
   if (manuscript) {
     message("\nCreating manuscript files...")
 
-    message("\nCopying Quarto extensions (Wordcount & Titlepage)")
-    copy_items(
-      source_paths = system.file("_extensions", package = "quickquartosetup"),
-      dest_folder = getwd(),
-      overwrite = overwrite
-    )
-
     copy_items(
       source_paths = system.file("images", package = "quickquartosetup"),
       dest_folder = getwd(),
       overwrite = overwrite
     )
 
-    if (title_page && logo && stat_decl) {
-      content_tmp <- quarto_manuscript_content_titlepage_logo_statutory_decl
-    }
-
-    if (title_page && logo && !(stat_decl)) {
-      content_tmp <- quarto_manuscript_content_titlepage_logo
-    }
-
-    if (title_page && stat_decl && !(logo)) {
-      content_tmp <- quarto_manuscript_content_titlepage_logo
-    }
-
-    if (title_page && !(stat_decl) && !(logo)) {
+    if (title_page && stat_decl) {
+      content_tmp <- quarto_manuscript_content_titlepage_statutory_decl
+    } else if (title_page) {
       content_tmp <- quarto_manuscript_content_titlepage
-    }
-
-    if ((!title_page) && stat_decl) {
+    } else if (stat_decl) {
       content_tmp <- quarto_manuscript_content_default_statutory_decl
-    }
-
-    if ((!title_page) && !(stat_decl)) {
+    } else {
       content_tmp <- quarto_manuscript_content_default
     }
 
@@ -1166,6 +1014,14 @@ Thumbs.db
       content = content_tmp,
       overwrite = overwrite
     )
+
+    if (title_page) {
+      create_file_with_content(
+        file_path = "title-page.tex",
+        content = title_page_tex_content,
+        overwrite = overwrite
+      )
+    }
   }
 
   # Presentation files

@@ -6,7 +6,7 @@
 \alias{quickquartosetup-package}
 \title{A lightweight R package for streamlined research project setup with Quarto}
 \description{
-This package provides the \code{project_setup()} helper function that allows for quick creation of new research projects. Based on personal experiences and preferences, it creates a pre-specified folder structure for data, code and images as well as several files, including a PDF \code{manuscript.qmd} source file, a Reveal.js \code{presentation.qmd} source file, an HTML \code{code.qmd} notebook, a \code{references.bib} bibliography template and a \code{.gitignore} file for version control.
+This package provides the \code{project_setup()} helper function that allows for quick creation of new research projects. Based on personal experiences and preferences, it scaffolds an opinionated folder structure for data and code along with several files, including a PDF \code{manuscript.qmd} source file, a Reveal.js \code{presentation.qmd} source file, an HTML \verb{code/00_code_template.qmd} template, a \code{references.bib} bibliography template, and a \code{.gitignore} file for version control.
 }
 \author{
 \strong{Maintainer}: Tristan Muno \email{trismuno@gmail.com}

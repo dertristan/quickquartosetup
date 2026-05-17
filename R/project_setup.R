@@ -16,7 +16,7 @@
 #'
 #' @param presentation Logical. If `TRUE`, creates a minimal Quarto Reveal.js presentation (`presentation.qmd`). Defaults to `TRUE`.
 #'
-#' @param code_files Logical. If `TRUE`, creates a code notebook file (`code/01_code.qmd`). Defaults to `TRUE`.
+#' @param code_files Logical. If `TRUE`, creates a code template file (`code/00_code_template.qmd`) that students can copy and rename for each analysis. Defaults to `TRUE`.
 #' @param data_folders Logical. If `TRUE`, creates standard data subfolders (`01_raw`, `02_processed`, `03_final`). Defaults to `TRUE`.
 #' @param gitignore Logical. If `TRUE`, generates a `.gitignore` file. Defaults to `TRUE`.
 #' @param overwrite Logical. If `TRUE`, allows overwriting files that `project_setup()` itself generates. Pre-existing user files are never touched. Defaults to `TRUE`.
@@ -442,7 +442,7 @@ geometry:
   quarto_code_notebook <- paste0(
     "---
 title: |
-  Code Notebook
+  Code Template
 subtitle: |
   ",
     title,
@@ -460,6 +460,8 @@ execute:
   eval: true
   message: true
 ---
+
+> Copy this file and rename it (e.g. `01_descriptives.qmd`) for each analysis you do.
 
 # Setup
 
@@ -669,12 +671,12 @@ Thumbs.db
     )
   }
 
-  # code qmd notebookd
+  # code qmd template
   if (code_files) {
-    message("\nCreating .qmd code notebooks...")
+    message("\nCreating .qmd code template...")
 
     create_file_with_content(
-      file_path = "code/01_code.qmd",
+      file_path = "code/00_code_template.qmd",
       content = quarto_code_notebook,
       overwrite = overwrite
     )

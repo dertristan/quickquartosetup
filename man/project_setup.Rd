@@ -39,7 +39,7 @@ project_setup(
 
 \item{presentation}{Logical. If \code{TRUE}, creates a minimal Quarto Reveal.js presentation (\code{presentation.qmd}). Defaults to \code{TRUE}.}
 
-\item{code_files}{Logical. If \code{TRUE}, creates a code notebook file (\verb{code/01_code.qmd}). Defaults to \code{TRUE}.}
+\item{code_files}{Logical. If \code{TRUE}, creates a code template file (\verb{code/00_code_template.qmd}) that students can copy and rename for each analysis. Defaults to \code{TRUE}.}
 
 \item{data_folders}{Logical. If \code{TRUE}, creates standard data subfolders (\verb{01_raw}, \verb{02_processed}, \verb{03_final}). Defaults to \code{TRUE}.}
 

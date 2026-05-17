@@ -9,6 +9,7 @@
 #' @param manuscript Logical. If `TRUE`, creates a Quarto manuscript file (`manuscript.qmd`). Defaults to `TRUE`.
 #' @param author A character string specifying the author's name. Included in manuscript, presentation, and code files. Defaults to `NULL`.
 #' @param institution A character string specifying the author's institution. Included in `manuscript.qmd`. Defaults to `NULL`.
+#' @param department A character string specifying the author's department or school. When `NULL`, no department line is rendered. Defaults to `NULL`.
 #' @param mail A character string specifying the author's email address. Included in `manuscript.qmd`. Defaults to `NULL`.
 #' @param student_id A character string specifying the student's ID. Included in `manuscript.qmd`. Defaults to `NULL`.
 #' @param title A character string specifying the working title of the project. Used in manuscript, presentation, and code files. Defaults to `NULL`.
@@ -17,7 +18,8 @@
 #' @param stat_decl Logical. If `TRUE`, adds a statutory declaration (e.g., for exam papers). Defaults to `FALSE`.
 #'
 #' @param presentation Logical. If `TRUE`, creates a Quarto Reveal.js presentation (`presentation.qmd`). Defaults to `TRUE`.
-#' @param uma_style Logical. If `TRUE`, generates a `theme.scss` and applies it to the presentation. Defaults to `TRUE`.
+#' @param uma_style Logical. If `TRUE`, generates a `theme.scss` and applies it to the presentation. Defaults to `FALSE`.
+#' @param theme_color A character string specifying a hex color used as the primary color in `theme.scss`. Only applies when `uma_style = TRUE`. Defaults to `"#333333"`.
 #'
 #' @param code_files Logical. If `TRUE`, creates a code notebook file (`01_code.qmd`) for documentation. Defaults to `TRUE`.
 #' @param data_folders Logical. If `TRUE`, creates standard data subfolders (`raw`, `processed`, `final`). Defaults to `TRUE`.
@@ -33,6 +35,7 @@ project_setup <- function(
   manuscript = TRUE,
   author = NULL,
   institution = NULL,
+  department = NULL,
   mail = NULL,
   student_id = NULL,
   title = NULL,
@@ -41,7 +44,8 @@ project_setup <- function(
   stat_decl = FALSE,
   # PRESENTATION SETUP OPTIONS
   presentation = TRUE,
-  uma_style = TRUE,
+  uma_style = FALSE,
+  theme_color = "#333333",
   # Other logistics
   code_files = TRUE,
   data_folders = TRUE,
@@ -514,6 +518,12 @@ geometry:
 
   # Native LaTeX Title Page Snippet ----------------------------------------------
 
+  title_page_department_line <- if (!is.null(department)) {
+    paste0("{", department, "} \\par\n")
+  } else {
+    ""
+  }
+
   title_page_tex_content <- paste0(
     "\\begin{titlepage}\n",
     "\\centering\n",
@@ -527,6 +537,7 @@ geometry:
     "{\\large ", author_with_id, " \\par}\n",
     "\\vspace{0.5cm}\n",
     "{", institution, "} \\par\n",
+    title_page_department_line,
     "\n",
     "\\vfill\n",
     "\n",
@@ -568,6 +579,12 @@ geometry:
 
   # Code QMD ---------------------------------------------------------------------
 
+  department_yaml_line <- if (!is.null(department)) {
+    paste0("\n        department: ", department)
+  } else {
+    ""
+  }
+
   quarto_code_notebook <- paste0(
     "---
 title: |
@@ -588,8 +605,8 @@ author:
     affiliations:
       - name: ",
     institution,
+    department_yaml_line,
     "
-        department: School of Social Sciences
 date: last-modified
 date-format: MMMM D, YYYY
 format:
@@ -861,42 +878,31 @@ preview-links: true
 "
   )
 
-  scss_content <- "/*-- scss:defaults --*/
-$caption-background: #003056;
+  scss_content <- paste0(
+    "/*-- scss:defaults --*/
+$caption-background: ", theme_color, ";
 $main-background: white;
-$main-text: #003056;
-$footnote-background: #003056;
-$presentation-heading-color: #003056;
+$main-text: ", theme_color, ";
+$footnote-background: ", theme_color, ";
+$presentation-heading-color: ", theme_color, ";
 
 /*-- scss:rules --*/
-/*.reveal .slides > section > h1, .reveal .slides > section > section > h2 {
-    background-color: $caption-background;
-    color: $main-background;
-} */
 
 #title-slide {
   .title {
-    color: #003056; /* This is the fill color for the inside of the text */
-  /*  -webkit-text-stroke: 1px #DE7E50; /* This adds the border color */
-  /*  text-stroke: 1px #DE7E50; /* For non-WebKit browsers */
+    color: ", theme_color, ";
   }
 
   .subtitle {
-    color: #003056;
-  /*  -webkit-text-stroke: 1px #DE7E50;
-  /*  text-stroke: 1px #DE7E50; */
+    color: ", theme_color, ";
   }
 
   .quarto-title-author {
-    color: #003056;
-  /*  -webkit-text-stroke: 1px #DE7E50;
-    text-stroke: 1px #DE7E50; */
+    color: ", theme_color, ";
   }
 
   .quarto-title-date {
-    color: #003056;
-   /* -webkit-text-stroke: 1px #DE7E50;
-    text-stroke: 1px #DE7E50; */
+    color: ", theme_color, ";
   }
 }
 
@@ -919,24 +925,18 @@ $presentation-heading-color: #003056;
 
 /* Custom color for author and date */
 .quarto-author, .quarto-date {
-  color: #003056; /* Change to your desired color */
+  color: ", theme_color, ";
 }
 
 /* Custom link and list styles */
 .reveal a {
-  color: #DE7E50;
+  color: ", theme_color, ";
 }
 .reveal li {
-  color: #003056;
+  color: ", theme_color, ";
 }
-
-/* Adjust the logo size */
-.reveal .slide-logo {
-        max-height: 4em !important;
-        top: 0;
-        right: 12px
-      }
 "
+  )
 
   # Gitignore file ---------------------------------------------------------------
 
@@ -992,12 +992,6 @@ Thumbs.db
   # Manuscript files
   if (manuscript) {
     message("\nCreating manuscript files...")
-
-    copy_items(
-      source_paths = system.file("images", package = "quickquartosetup"),
-      dest_folder = getwd(),
-      overwrite = overwrite
-    )
 
     if (title_page && stat_decl) {
       content_tmp <- quarto_manuscript_content_titlepage_statutory_decl

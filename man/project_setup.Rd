@@ -10,6 +10,7 @@ project_setup(
   manuscript = TRUE,
   author = NULL,
   institution = NULL,
+  department = NULL,
   mail = NULL,
   student_id = NULL,
   title = NULL,
@@ -17,7 +18,8 @@ project_setup(
   title_page = FALSE,
   stat_decl = FALSE,
   presentation = TRUE,
-  uma_style = TRUE,
+  uma_style = FALSE,
+  theme_color = "#333333",
   code_files = TRUE,
   data_folders = TRUE,
   gitignore = TRUE,
@@ -35,6 +37,8 @@ project_setup(
 
 \item{institution}{A character string specifying the author's institution. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
 
+\item{department}{A character string specifying the author's department or school. When \code{NULL}, no department line is rendered. Defaults to \code{NULL}.}
+
 \item{mail}{A character string specifying the author's email address. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
 
 \item{student_id}{A character string specifying the student's ID. Included in \code{manuscript.qmd}. Defaults to \code{NULL}.}
@@ -49,7 +53,9 @@ project_setup(
 
 \item{presentation}{Logical. If \code{TRUE}, creates a Quarto Reveal.js presentation (\code{presentation.qmd}). Defaults to \code{TRUE}.}
 
-\item{uma_style}{Logical. If \code{TRUE}, generates a \code{theme.scss} and applies it to the presentation. Defaults to \code{TRUE}.}
+\item{uma_style}{Logical. If \code{TRUE}, generates a \code{theme.scss} and applies it to the presentation. Defaults to \code{FALSE}.}
+
+\item{theme_color}{A character string specifying a hex color used as the primary color in \code{theme.scss}. Only applies when \code{uma_style = TRUE}. Defaults to \code{"#333333"}.}
 
 \item{code_files}{Logical. If \code{TRUE}, creates a code notebook file (\verb{01_code.qmd}) for documentation. Defaults to \code{TRUE}.}
 

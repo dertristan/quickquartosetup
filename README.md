@@ -7,18 +7,18 @@ With a single call to `qqs()`, you can instantly create a clean, reproducible fo
 
 Whether you're writing a manuscript, preparing a presentation, or organizing your analysis pipeline, `qqs` helps you work faster and stay organized. The structure follows best practices in academic research and is based on the author's experience managing multiple projects efficiently.
 
-> **Note:** This package originated as a personal side project and is now being actively developed as a course companion for [QMIR – Quantitative Methods in International Relations and European Politics](https://github.com/qmir-2026) at the University of Mannheim. The goal is a **minimalist, dependency-light package** optimized for the workflow taught in the course: **R + Quarto + Git/GitHub in Positron**. It is intentionally kept simple and opinionated to lower the barrier for students applying course workflows to their own term papers and theses.
+> **Note:** This package originated as a personal side project and is now being actively developed as a course companion for [QMIR -- Quantitative Methods in International Relations and European Politics](https://github.com/qmir-2026) at the University of Mannheim. The goal is a **minimalist, dependency-light package** optimized for the workflow taught in the course: **R + Quarto + Git/GitHub in Positron**. It is intentionally kept simple and opinionated to lower the barrier for students applying course workflows to their own term papers and theses.
 
 ---
 
 ## ✨ Features
 
-- **One command, in-place scaffolding** – Call `qqs()` from inside your project folder and the package writes its files directly into the current working directory. Existing files (cloned dataset, README, etc.) are left untouched.
-- **Built-in Quarto integration** – Generates `.qmd` files for the manuscript, presentation, and code template, plus a `references.bib` and a `.gitignore`.
-- **Centralized project metadata** – A single `_quarto.yml` defines the shared author/date/bibliography/execute defaults for every document.
-- **Student-ready options** – Include a bilingual (German/English) statutory declaration and a student ID footnote for term papers.
-- **Native title page** – Optional `title-page.tex` included before the manuscript body. No Quarto extensions required.
-- **Quarto getting-started links** – Each generated document carries a link to the relevant Quarto documentation page, so students can quickly find help.
+- **One command, in-place scaffolding** -- Call `qqs()` from inside your project folder and the package writes its files directly into the current working directory. Existing files (cloned dataset, README, etc.) are left untouched.
+- **Built-in Quarto integration** -- Generates `.qmd` files for the manuscript, presentation, and code template, plus a `references.bib` and a `.gitignore`.
+- **Centralized project metadata** -- A single `_quarto.yml` defines the shared author/date/bibliography/execute defaults for every document.
+- **Student-ready options** -- Include a bilingual (German/English) statutory declaration and a student ID footnote for term papers.
+- **Native title page** -- Optional `title-page.tex` included before the manuscript body. No Quarto extensions required. ⚠️ Experimental and not yet fully supported.
+- **Quarto getting-started links** -- Each generated document carries a link to the relevant Quarto documentation page, so students can quickly find help.
 
 ---
 
@@ -48,12 +48,12 @@ qqs()
 
 This scaffolds:
 
-- `_quarto.yml` – project-level metadata (author, date, bibliography, execute defaults) shared across documents
-- `manuscript.qmd` – main manuscript
-- `presentation.qmd` – minimal Reveal.js presentation
-- `code/00_code_template.qmd` – copy-and-rename code template for each analysis
-- `data/` – with `01_raw`, `02_processed`, and `03_final` subfolders
-- `references.bib` – shared bibliography
+- `_quarto.yml` -- project-level metadata (author, date, bibliography, execute defaults) shared across documents
+- `manuscript.qmd` -- main manuscript
+- `presentation.qmd` -- minimal Reveal.js presentation
+- `code/00_code_template.qmd` -- copy-and-rename code template for each analysis
+- `data/` -- with `01_raw`, `02_processed`, and `03_final` subfolders
+- `references.bib` -- shared bibliography
 - `.gitignore`
 
 When `title_page = TRUE` a native `title-page.tex` snippet is added and pulled in via `include-before-body`.

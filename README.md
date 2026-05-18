@@ -105,7 +105,7 @@ See `?qqs` for the full list of arguments.
 - [Quarto Reveal.js documentation](https://quarto.org/docs/presentations/revealjs/) for help with slide authoring.
 
 
---
+---
 
 ## 📄 License
 

@@ -1,38 +1,35 @@
-# quickquartosetup — CLAUDE.md
+# qqs — CLAUDE.md
 
 ## What this project is
 
-`quickquartosetup` is a lightweight R package (v0.0.0.9000, MIT) authored by Tristan Muno. Its single purpose: one call to `project_setup()` scaffolds an opinionated set of Quarto template files into the **current working directory** — leaving any pre-existing files (cloned datasets, READMEs, etc.) untouched.
+`qqs` (short for *quick quarto setup*) is a lightweight R package (v0.0.0.9000, MIT) authored by Tristan Muno. Its single purpose: one call to `qqs()` scaffolds an opinionated set of Quarto template files into the **current working directory** — leaving any pre-existing files (cloned datasets, READMEs, etc.) untouched.
 
 It started as a personal tool and is now being refined as a course companion for **QMIR – Quantitative Methods in International Relations and European Politics** at the University of Mannheim. The guiding design principle is **minimalism and low dependencies**, to keep it easy for students using R + Quarto + Git/GitHub in Positron.
 
-The intended workflow: a student clones an exam repository (already containing a dataset and a README), navigates into the folder, and calls `project_setup()` to scaffold their working files in place.
+The intended workflow: a student clones an exam repository (already containing a dataset and a README), navigates into the folder, and calls `qqs()` to scaffold their working files in place.
 
 ---
 
 ## Repository layout
 
 ```
-quickquartosetup/
+qqs/
 ├── R/
-│   ├── project_setup.R          # The one public function — all logic lives here
-│   └── quickquartosetup-package.R  # Package-level roxygen docs
-├── vignettes/
-│   ├── introduction.Rmd         # Package vignette (out of date: still references old extensions)
-│   └── my_*/                    # Pre-rendered example projects (from vignette code)
-├── dev-guide.qmd                # Git/GitHub branching reference (course material)
+│   ├── qqs.R                  # The one public function — all logic lives here
+│   └── qqs-package.R          # Package-level roxygen docs
+├── dev-guide.qmd              # Git/GitHub branching reference (course material)
 ├── DESCRIPTION
 ├── LICENSE.md
 └── README.md
 ```
 
-Note: `inst/` has been removed. The package no longer ships any Quarto extensions or branded image assets.
+Note: `inst/` and `vignettes/` have been removed. The package no longer ships any Quarto extensions, branded image assets, or vignettes.
 
 ---
 
-## Core function: `project_setup()`
+## Core function: `qqs()`
 
-**File**: `R/project_setup.R`
+**File**: `R/qqs.R`
 
 Single exported function. All template content is defined as inline strings inside the function body (no separate template files).
 
@@ -51,7 +48,7 @@ Single exported function. All template content is defined as inline strings insi
 | `title` / `subtitle` | `"Untitled Project"` / `"A great project"` | YAML metadata |
 | `title_page` | `FALSE` | Generate `title-page.tex` and include it via `include-before-body` |
 | `stat_decl` | `FALSE` | Append German/English statutory declaration |
-| `overwrite` | `TRUE` | Whether to overwrite files `project_setup()` itself generates (pre-existing user files are never touched) |
+| `overwrite` | `TRUE` | Whether to overwrite files `qqs()` itself generates (pre-existing user files are never touched) |
 
 ### Generated project structure
 
@@ -79,7 +76,7 @@ The scaffold is written into the **current working directory** — there is no w
 
 Shared YAML metadata (author with optional footnote, date, bibliography, biblio-style, link-citations, execute defaults) lives in `_quarto.yml` and is inherited by every document. Per-file YAML now only carries format-specific keys and intentional overrides (e.g. the code notebook's `echo: true`). Note: the LaTeX `^[…]` footnote syntax in the author string does not render cleanly in the HTML code template — this is an accepted trade-off, since the PDF manuscript is the primary document.
 
-### Internal helpers (defined inside `project_setup()`)
+### Internal helpers (defined inside `qqs()`)
 
 - `create_folder(folder_path)` — idempotent `dir.create(recursive = TRUE)`
 - `create_file_with_content(file_path, content, overwrite)` — writes text with overwrite logic
@@ -88,31 +85,31 @@ Shared YAML metadata (author with optional footnote, date, bibliography, biblio-
 
 ## Active development direction
 
-Rounds one and two of the QMIR-course simplification roadmap are complete:
+Rounds one through three of the QMIR-course simplification roadmap are complete:
 
 1. ~~**Remove Quarto extension dependencies**~~ — title page is now native; wordcount has been removed
 2. ~~**Make templates institution-agnostic**~~ — UMA branding and logos removed
 3. ~~**Central YAML metadata file**~~ — shared keys live in `_quarto.yml`
-4. ~~**In-place scaffolding**~~ — `project_setup()` writes into the current working directory rather than creating a subfolder
+4. ~~**In-place scaffolding**~~ — `qqs()` writes into the current working directory rather than creating a subfolder
 5. ~~**Slim the signature**~~ — removed `project_name`, `target_path`, `institution`, `department`, `uma_style`, `theme_color`; stripped `theme.scss` and the UMA presentation variant
 6. ~~**Author in `_quarto.yml`**~~ — the author field (with optional mail/student-id footnote) is no longer duplicated in `manuscript.qmd`
 7. ~~**Reusable code template**~~ — `code/01_code.qmd` renamed to `code/00_code_template.qmd` with copy-and-rename guidance baked in
 8. ~~**Quarto getting-started links**~~ — every generated document carries a visible link to the relevant Quarto docs page
+9. ~~**Rename to `qqs`**~~ — package is now `qqs`, the single exported function is `qqs()`, the vignette has been removed
 
 Remaining work:
 
-9. **German language support**
-10. **Commented Quarto examples** in generated files (citations, figures, tables, cross-references)
-11. **Optional helper scripts**
-12. **Update the introduction vignette** to match the simplified signature (its example chunks are currently marked `eval = FALSE` as a stopgap)
-13. Fix installation warnings (license pointer in DESCRIPTION, non-ASCII in `R/project_setup.R`, pre-rendered vignette outputs)
+10. **German language support**
+11. **Commented Quarto examples** in generated files (citations, figures, tables, cross-references)
+12. **Optional helper scripts**
+13. Fix installation warnings (license pointer in DESCRIPTION, non-ASCII in `R/qqs.R`)
 
 ---
 
 ## Development notes
 
 - No test suite yet (`testthat` not listed in DESCRIPTION)
-- No external runtime dependencies — only `knitr` and `rmarkdown` in `Suggests` (for vignettes)
+- No runtime or vignette dependencies — `Suggests` is empty
 - Use `devtools::load_all()` to test changes without reinstalling
 - Use `devtools::check()` before merging
 - The `dev-guide.qmd` is a Git branching guide for course students, not package documentation
@@ -121,24 +118,24 @@ Remaining work:
 
 ## Implementation strategies for the QMIR course roadmap
 
-These are design notes for translating the remaining roadmap items into concrete changes. Items 1–8 have been completed; see the commit history for what landed.
+These are design notes for translating the remaining roadmap items into concrete changes. Items 1–9 have been completed; see the commit history for what landed.
 
 ---
 
-### 9. German language support
+### 10. German language support
 
 **The problem**: Quarto outputs labels like "Figure", "Table", "References" in English by default.
 
 **Strategy**:
 - Add a `language = "en"` parameter (options: `"en"`, `"de"`)
 - When `"de"`, inject `lang: de` into the YAML of generated files — Quarto natively translates labels to German when `lang: de` is set
-- Section headings in the manuscript template can be switched: Introduction → Einleitung, Theory → Theorie, etc. — store these as a named list in a small helper at the top of `project_setup()`
+- Section headings in the manuscript template can be switched: Introduction → Einleitung, Theory → Theorie, etc. — store these as a named list in a small helper at the top of `qqs()`
 - The statutory declaration is already bilingual; no change needed there
 - Keep English as the only supported option for now; add `"de"` as the first extension
 
 ---
 
-### 10. Commented Quarto examples in generated files
+### 11. Commented Quarto examples in generated files
 
 **The problem**: Students new to Quarto don't know how to add citations, figures, tables, or cross-references in the manuscript template.
 
@@ -156,7 +153,7 @@ These are design notes for translating the remaining roadmap items into concrete
 
 ---
 
-### 11. Optional helper scripts
+### 12. Optional helper scripts
 
 **The problem**: Students repeatedly write the same boilerplate for loading packages, setting paths with `here`, and checking/installing dependencies.
 
@@ -171,7 +168,7 @@ These are design notes for translating the remaining roadmap items into concrete
 
 ### Architectural consideration: template strings vs. file-based templates
 
-**Current approach**: all content lives as `paste0()` multi-line strings inside `project_setup()`. This is self-contained but still makes the function ~700 lines and harder to edit than a plain `.qmd` file.
+**Current approach**: all content lives as `paste0()` multi-line strings inside `qqs()`. This is self-contained but still makes the function ~700 lines and harder to edit than a plain `.qmd` file.
 
 **Alternative worth considering**: move templates to `inst/templates/*.qmd` files with `{{{placeholder}}}` markers and use `whisker::whisker.render()` for substitution (or just `gsub()` without adding a dependency). This would:
 - Make template editing much easier (edit a real `.qmd` file, not a string inside R code)

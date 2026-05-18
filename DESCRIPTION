@@ -1,14 +1,10 @@
-Package: quickquartosetup
+Package: qqs
 Title: A lightweight R package for streamlined research project setup with Quarto
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     person("Tristan", "Muno", , "trismuno@gmail.com", role = c("aut", "cre"))
-Description: This package provides the `project_setup()` helper function that allows for quick creation of new research projects. Based on my personal experiences and preferences, it creates a pre-specified folder structure for data, code and images as well as several files, including a pdf `manuscript.qmd` source file, a revealjs `presentation.qmd` source file, an html `code.qmd` notebook, a `references.bib` bibliography template and a `.gitignore` file for version control.
+Description: A lightweight R package that exposes a single `qqs()` helper for quickly scaffolding new research projects. Based on personal experience and preferences, it creates a pre-specified folder structure for data and code along with several files, including a PDF `manuscript.qmd` source file, a Reveal.js `presentation.qmd` source file, an HTML `code/00_code_template.qmd` notebook, a `references.bib` bibliography template, and a `.gitignore` file for version control.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Suggests: 
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr

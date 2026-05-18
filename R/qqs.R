@@ -1,9 +1,9 @@
-#' Project Setup
+#' Quick Quarto Setup
 #'
 #' Scaffolds a standardized research project folder structure (manuscript, presentation,
 #' code notebook, data folders, bibliography, `_quarto.yml`) directly into the current
 #' working directory. Pre-existing files in the working directory are left untouched;
-#' the `overwrite` flag only governs files that `project_setup()` itself generates.
+#' the `overwrite` flag only governs files that `qqs()` itself generates.
 #'
 #' @param manuscript Logical. If `TRUE`, creates a Quarto manuscript file (`manuscript.qmd`). Defaults to `TRUE`.
 #' @param author A character string specifying the author's name. Used in the project-level `_quarto.yml`. Defaults to `NULL` (system username).
@@ -19,11 +19,11 @@
 #' @param code_files Logical. If `TRUE`, creates a code template file (`code/00_code_template.qmd`) that students can copy and rename for each analysis. Defaults to `TRUE`.
 #' @param data_folders Logical. If `TRUE`, creates standard data subfolders (`01_raw`, `02_processed`, `03_final`). Defaults to `TRUE`.
 #' @param gitignore Logical. If `TRUE`, generates a `.gitignore` file. Defaults to `TRUE`.
-#' @param overwrite Logical. If `TRUE`, allows overwriting files that `project_setup()` itself generates. Pre-existing user files are never touched. Defaults to `TRUE`.
+#' @param overwrite Logical. If `TRUE`, allows overwriting files that `qqs()` itself generates. Pre-existing user files are never touched. Defaults to `TRUE`.
 #'
 #' @export
 
-project_setup <- function(
+qqs <- function(
   # MANUSCRIPT SETUP OPTIONS
   manuscript = TRUE,
   author = NULL,

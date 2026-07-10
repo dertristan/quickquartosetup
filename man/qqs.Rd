@@ -6,12 +6,13 @@
 \usage{
 qqs(
   manuscript = TRUE,
+  tutorial = FALSE,
   author = NULL,
   mail = NULL,
   student_id = NULL,
   title = NULL,
   subtitle = NULL,
-  title_page = FALSE,
+  titlepage = FALSE,
   stat_decl = FALSE,
   presentation = TRUE,
   code_files = TRUE,
@@ -23,6 +24,8 @@ qqs(
 \arguments{
 \item{manuscript}{Logical. If \code{TRUE}, creates a Quarto manuscript file (\code{manuscript.qmd}). Defaults to \code{TRUE}.}
 
+\item{tutorial}{Logical. If \code{TRUE}, populates \code{manuscript.qmd} with live, rendering Quarto examples (prose formatting, a table, a figure, equations, cross-references, and citations) instead of the plain placeholder body. Defaults to \code{FALSE}.}
+
 \item{author}{A character string specifying the author's name. Used in the project-level \verb{_quarto.yml}. Defaults to \code{NULL} (system username).}
 
 \item{mail}{A character string specifying the author's email address. When non-default, included as a footnote on the author. Defaults to \code{NULL}.}
@@ -33,7 +36,7 @@ qqs(
 
 \item{subtitle}{A character string specifying the subtitle of the project. Used in manuscript and presentation. Defaults to \code{NULL}.}
 
-\item{title_page}{Logical. If \code{TRUE}, generates a native LaTeX title page (\code{title-page.tex}) included before the manuscript body. Defaults to \code{FALSE}.}
+\item{titlepage}{Logical. If \code{TRUE}, generates a native LaTeX title page (\code{title-page.tex}) and arranges the manuscript front matter as cover page, then abstract, then table of contents, before the body. The title page is a single, easy-to-edit \code{.tex} file. Defaults to \code{FALSE}.}
 
 \item{stat_decl}{Logical. If \code{TRUE}, adds a bilingual (German/English) statutory declaration (e.g., for exam papers). Defaults to \code{FALSE}.}
 

@@ -6,12 +6,13 @@
 #' the `overwrite` flag only governs files that `qqs()` itself generates.
 #'
 #' @param manuscript Logical. If `TRUE`, creates a Quarto manuscript file (`manuscript.qmd`). Defaults to `TRUE`.
+#' @param tutorial Logical. If `TRUE`, populates `manuscript.qmd` with live, rendering Quarto examples (prose formatting, a table, a figure, equations, cross-references, and citations) instead of the plain placeholder body. Defaults to `FALSE`.
 #' @param author A character string specifying the author's name. Used in the project-level `_quarto.yml`. Defaults to `NULL` (system username).
 #' @param mail A character string specifying the author's email address. When non-default, included as a footnote on the author. Defaults to `NULL`.
 #' @param student_id A character string specifying the student's ID. When non-default, included as a footnote on the author. Defaults to `NULL`.
 #' @param title A character string specifying the working title of the project. Used in manuscript and presentation. Defaults to `NULL`.
 #' @param subtitle A character string specifying the subtitle of the project. Used in manuscript and presentation. Defaults to `NULL`.
-#' @param title_page Logical. If `TRUE`, generates a native LaTeX title page (`title-page.tex`) included before the manuscript body. Defaults to `FALSE`.
+#' @param titlepage Logical. If `TRUE`, generates a native LaTeX title page (`title-page.tex`) and arranges the manuscript front matter as cover page, then abstract, then table of contents, before the body. The title page is a single, easy-to-edit `.tex` file. Defaults to `FALSE`.
 #' @param stat_decl Logical. If `TRUE`, adds a bilingual (German/English) statutory declaration (e.g., for exam papers). Defaults to `FALSE`.
 #'
 #' @param presentation Logical. If `TRUE`, creates a minimal Quarto Reveal.js presentation (`presentation.qmd`). Defaults to `TRUE`.
@@ -26,12 +27,13 @@
 qqs <- function(
   # MANUSCRIPT SETUP OPTIONS
   manuscript = TRUE,
+  tutorial = FALSE,
   author = NULL,
   mail = NULL,
   student_id = NULL,
   title = NULL,
   subtitle = NULL,
-  title_page = FALSE,
+  titlepage = FALSE,
   stat_decl = FALSE,
   # PRESENTATION SETUP OPTIONS
   presentation = TRUE,
@@ -188,9 +190,14 @@ qqs <- function(
   ### 5. Define All File Content Strings
   ### --------------------------------------------------------------------------
 
-  # Default PDF Manuscript (No Title Page) -------------------------------------
+  # The manuscript is composed from independent parts (YAML front matter + body +
+  # shared trailer + optional statutory declaration) so that the `titlepage`,
+  # `tutorial`, and `stat_decl` flags combine freely without a combinatorial
+  # explosion of precomputed template strings.
 
-  quarto_manuscript_content_default <- paste0(
+  # Manuscript YAML: plain PDF (default, no title page) ---------------------------
+
+  manuscript_yaml_default <- paste0(
     "---
 title: |
   ",
@@ -224,9 +231,60 @@ geometry:
   - footskip = 20pt
 ---
 
-> See [Quarto authoring with Positron](https://quarto.org/docs/get-started/authoring/positron.html) for help with manuscript authoring.
+"
+  )
 
-## Introduction {#sec-introduction}
+  # Manuscript YAML: title-page variant ------------------------------------------
+  # Adds a cover page (title-page.tex) before the body and turns the table of
+  # contents on, giving the flow: cover -> abstract (via \\maketitle) -> TOC ->
+  # body. The date set in _quarto.yml is rendered by \\maketitle on the abstract
+  # page; the cover uses LaTeX's built-in \\today.
+
+  manuscript_yaml_titlepage <- paste0(
+    "---
+title: |
+  ",
+    title,
+    "
+subtitle: |
+  ",
+    subtitle,
+    "
+abstract: |
+  You can add an abstract here.
+thanks: |
+   You can add acknowledgements here.
+format:
+  pdf:
+    keep-tex: false
+    toc: true
+    include-before-body: title-page.tex
+    include-in-header:
+      text: |
+        \\usepackage{setspace}
+        \\setlength{\\parindent}{15pt}
+number-sections: true
+papersize: a4
+fontsize: 12pt
+linestretch: 2
+geometry:
+  - top = 2cm
+  - bottom = 2cm
+  - left = 2.5cm
+  - right = 2.5cm
+  - footskip = 20pt
+---
+
+"
+  )
+
+  # Shared authoring-help note shown at the top of the manuscript body -----------
+
+  manuscript_intro <- "> See [Quarto authoring with Positron](https://quarto.org/docs/get-started/authoring/positron.html) for help with manuscript authoring.\n\n"
+
+  # Manuscript body: plain placeholder (default) ---------------------------------
+
+  manuscript_body_lipsum <- "## Introduction {#sec-introduction}
 
 {{< lipsum 2 >}}
 
@@ -245,7 +303,81 @@ geometry:
 ## Conclusion {#sec-conclusion}
 
 {{< lipsum 2 >}}
+"
 
+  # Manuscript body: live Quarto tutorial ----------------------------------------
+  # Single-quoted so the many double quotes in code chunks need no escaping.
+  # Backslashes are still doubled because R interprets escapes in both quote
+  # styles. Everything here renders with base R + knitr only (no new packages).
+
+  manuscript_body_tutorial <- '## Introduction {#sec-introduction}
+
+This manuscript is a live tutorial: every feature below is written in
+[Quarto](https://quarto.org) Markdown and renders straight to PDF. Read this
+`.qmd` source next to the rendered output to see exactly how each element is
+written.
+
+### Prose formatting
+
+Text can be **bold**, *italic*, or `monospaced`, and lists are simple:
+
+- A first point
+- A second point that links to the [Quarto website](https://quarto.org)
+
+> Use a block quote to highlight an important statement.
+
+### Citations
+
+Cite a work in parentheses [@article_key_here] or directly in the text as
+@book_key_here. Every citation is gathered automatically in the References
+section below, drawn from `references.bib`.
+
+## Tables {#sec-tables}
+
+Give a code chunk a `tbl-` label and a caption to make it cross-referable.
+@tbl-summary is built with `knitr::kable()`.
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "First rows of the built-in mtcars dataset."
+
+knitr::kable(head(mtcars[, 1:5]))
+```
+
+## Figures {#sec-figures}
+
+A `fig-` label does the same for plots, so @fig-scatter can be referenced from
+anywhere in the text.
+
+```{r}
+#| label: fig-scatter
+#| fig-cap: "Fuel efficiency against weight in the mtcars dataset."
+
+plot(mtcars$wt, mtcars$mpg,
+     xlab = "Weight (1000 lbs)",
+     ylab = "Miles per gallon",
+     pch = 19)
+```
+
+## Equations {#sec-equations}
+
+Write maths inline, such as $y = \\beta_0 + \\beta_1 x$, or as a numbered
+display equation like @eq-model:
+
+$$
+y_i = \\beta_0 + \\beta_1 x_i + \\varepsilon_i
+$$ {#eq-model}
+
+## Cross-references {#sec-crossref}
+
+References work across the document too: see @sec-tables for tables and
+@sec-figures for figures. Quarto renders every `@` reference as a numbered link
+automatically.
+'
+
+  # Shared manuscript trailer ----------------------------------------------------
+
+  manuscript_tail <- "
 \\singlespacing
 
 ## References
@@ -256,9 +388,8 @@ geometry:
 ## Appendix {.appendix}
 
 "
-  )
 
-  # If statutory declaration is TRUE
+  # Statutory declaration (appended when stat_decl = TRUE) -----------------------
 
   stat_decl_content <- "
 \\newpage
@@ -308,88 +439,10 @@ the paper cannot be evaluated and may be graded “failed” (“nicht
 ```
 "
 
-  quarto_manuscript_content_default_statutory_decl <- paste0(
-    quarto_manuscript_content_default,
-    stat_decl_content
-  )
-
-  # PDF Manuscript with Title Page -----------------------------------------------
-
-  quarto_manuscript_content_titlepage <- paste0(
-    "---
-title: |
-  ",
-    title,
-    "
-subtitle: |
-  ",
-    subtitle,
-    "
-abstract: |
-  You can add an abstract here.
-thanks: |
-   You can add acknowledgements here.
-format:
-  pdf:
-    keep-tex: false
-    toc: false
-    include-before-body: title-page.tex
-    include-in-header:
-      text: |
-        \\usepackage{setspace}
-        \\setlength{\\parindent}{15pt}
-number-sections: true
-papersize: a4
-fontsize: 12pt
-linestretch: 2
-geometry:
-  - top = 2cm
-  - bottom = 2cm
-  - left = 2.5cm
-  - right = 2.5cm
-  - footskip = 20pt
----
-
-> See [Quarto authoring with Positron](https://quarto.org/docs/get-started/authoring/positron.html) for help with manuscript authoring.
-
-## Introduction {#sec-introduction}
-
-{{< lipsum 2 >}}
-
-## Theory {#sec-theory}
-
-{{< lipsum 2 >}}
-
-## Research Design {#sec-design}
-
-{{< lipsum 2 >}}
-
-## Empirical Analysis {#sec-analysis}
-
-{{< lipsum 2 >}}
-
-## Conclusion {#sec-conclusion}
-
-{{< lipsum 2 >}}
-
-\\singlespacing
-
-## References
-
-::: {#refs}
-:::
-
-## Appendix {.appendix}
-
-"
-  )
-
-  quarto_manuscript_content_titlepage_statutory_decl <- paste0(
-    quarto_manuscript_content_titlepage,
-    stat_decl_content
-  )
-
   # Native LaTeX Title Page Snippet ----------------------------------------------
+  # A single, easy-to-edit cover page. Title, subtitle, and author are filled in
+  # from the function call; the date uses LaTeX's built-in \\today. (The date set
+  # in _quarto.yml is separately rendered by \\maketitle on the abstract page.)
 
   title_page_tex_content <- paste0(
     "\\begin{titlepage}\n",
@@ -633,23 +686,24 @@ Thumbs.db
   if (manuscript) {
     message("\nCreating manuscript files...")
 
-    if (title_page && stat_decl) {
-      content_tmp <- quarto_manuscript_content_titlepage_statutory_decl
-    } else if (title_page) {
-      content_tmp <- quarto_manuscript_content_titlepage
-    } else if (stat_decl) {
-      content_tmp <- quarto_manuscript_content_default_statutory_decl
-    } else {
-      content_tmp <- quarto_manuscript_content_default
-    }
+    # Compose the manuscript from independent parts: YAML front matter (plain or
+    # title-page), body (placeholder or tutorial), the shared trailer, and the
+    # optional statutory declaration.
+    manuscript_content <- paste0(
+      if (titlepage) manuscript_yaml_titlepage else manuscript_yaml_default,
+      manuscript_intro,
+      if (tutorial) manuscript_body_tutorial else manuscript_body_lipsum,
+      manuscript_tail,
+      if (stat_decl) stat_decl_content else ""
+    )
 
     create_file_with_content(
       file_path = "manuscript.qmd",
-      content = content_tmp,
+      content = manuscript_content,
       overwrite = overwrite
     )
 
-    if (title_page) {
+    if (titlepage) {
       create_file_with_content(
         file_path = "title-page.tex",
         content = title_page_tex_content,

@@ -38,6 +38,7 @@ Single exported function. All template content is defined as inline strings insi
 | Parameter | Default | Purpose |
 |---|---|---|
 | `manuscript` | `TRUE` | Generate `manuscript.qmd` (plain `pdf` format) |
+| `tutorial` | `FALSE` | Fill `manuscript.qmd` with live, rendering Quarto examples (prose, table, figure, equations, cross-refs, citations) instead of the `{{< lipsum >}}` placeholder body. Base R + knitr only |
 | `presentation` | `TRUE` | Generate a minimal `presentation.qmd` (Reveal.js) |
 | `code_files` | `TRUE` | Generate `code/00_code_template.qmd` (HTML, copy-and-rename template) |
 | `data_folders` | `TRUE` | Create `data/01_raw`, `02_processed`, `03_final` |
@@ -46,7 +47,7 @@ Single exported function. All template content is defined as inline strings insi
 | `mail` | placeholder | When non-default, added as `Mail: …` footnote on the author |
 | `student_id` | `"1234567"` | When non-default, added as `Student ID: …` footnote on the author |
 | `title` / `subtitle` | `"Untitled Project"` / `"A great project"` | YAML metadata |
-| `title_page` | `FALSE` | Generate `title-page.tex` and include it via `include-before-body` |
+| `titlepage` | `FALSE` | Generate a single, easy-to-edit `title-page.tex` cover and arrange front matter as cover page → abstract → TOC → body (via `include-before-body` + `toc: true`) |
 | `stat_decl` | `FALSE` | Append German/English statutory declaration |
 | `overwrite` | `TRUE` | Whether to overwrite files `qqs()` itself generates (pre-existing user files are never touched) |
 
@@ -62,17 +63,19 @@ The scaffold is written into the **current working directory** — there is no w
 ├── data/02_processed/
 ├── data/03_final/
 ├── manuscript.qmd                 # Plain PDF manuscript (default or titlepage variant)
-├── title-page.tex                 # Only when title_page = TRUE
+├── title-page.tex                 # Only when titlepage = TRUE
 ├── presentation.qmd               # Minimal Reveal.js deck (auto title slide + one content slide)
 ├── references.bib                 # BibTeX starter entries
 └── .gitignore
 ```
 
-### Manuscript variants (chosen by flag combination)
+### Manuscript composition (assembled from independent parts)
 
-- Default: plain `pdf` format; the author (with its optional `Mail` / `Student ID` footnote) is inherited from `_quarto.yml`
-- `title_page = TRUE`: plain `pdf` format with `include-before-body: title-page.tex`; the title page is rendered from a small native LaTeX snippet (no Quarto extensions involved)
-- Any + `stat_decl = TRUE`: appends bilingual (German/English) statutory declaration
+`manuscript.qmd` is composed from four independent pieces — YAML front matter + body + shared trailer + optional statutory declaration — so the `titlepage`, `tutorial`, and `stat_decl` flags combine freely without a combinatorial explosion of precomputed strings (see the composition in the `if (manuscript)` block).
+
+- **YAML front matter**: `manuscript_yaml_default` (plain `pdf`, `toc: false`) or `manuscript_yaml_titlepage` (`toc: true` + `include-before-body: title-page.tex`, giving cover page → abstract → TOC → body). The title page is a small native LaTeX snippet (no Quarto extensions); title/subtitle/author are interpolated from the call, the cover date uses `\today`, and the `_quarto.yml` date is rendered by `\maketitle` on the abstract page. Note: the `titling` package is deliberately *not* used — it breaks when the author carries a `^[…]` footnote.
+- **Body**: `manuscript_body_lipsum` (`{{< lipsum >}}` placeholder) or `manuscript_body_tutorial` (live examples; base R + knitr only, citing the keys already in `references.bib`).
+- **Trailer** (`manuscript_tail`) + optional `stat_decl_content`: appends the bilingual (German/English) statutory declaration.
 
 Shared YAML metadata (author with optional footnote, date, bibliography, biblio-style, link-citations, execute defaults) lives in `_quarto.yml` and is inherited by every document. Per-file YAML now only carries format-specific keys and intentional overrides (e.g. the code notebook's `echo: true`). Note: the LaTeX `^[…]` footnote syntax in the author string does not render cleanly in the HTML code template — this is an accepted trade-off, since the PDF manuscript is the primary document.
 
@@ -100,9 +103,10 @@ Rounds one through three of the QMIR-course simplification roadmap are complete:
 Remaining work:
 
 10. **German language support**
-11. **Commented Quarto examples** in generated files (citations, figures, tables, cross-references)
+11. ~~**Commented Quarto examples** in generated files~~ — superseded by the `tutorial` flag, which populates the manuscript with *live, rendering* examples (citations, figures, tables, cross-references, equations) rather than commented-out snippets
 12. **Optional helper scripts**
 13. Fix installation warnings (license pointer in DESCRIPTION, non-ASCII in `R/qqs.R`)
+14. **Marketing GIFs** — animated GIFs on GitHub advertising the `qqs()` workflow ahead of the new term (screen-capture a Positron session, export optimized GIF to `man/figures/`, embed in `README.md`)
 
 ---
 
@@ -135,21 +139,19 @@ These are design notes for translating the remaining roadmap items into concrete
 
 ---
 
-### 11. Commented Quarto examples in generated files
+### 11. Quarto examples in generated files — DONE (via `tutorial`)
 
 **The problem**: Students new to Quarto don't know how to add citations, figures, tables, or cross-references in the manuscript template.
 
-**Strategy**:
-- Add a `quarto_examples = FALSE` parameter
-- When `TRUE`, append a commented-out `## Examples` section to the manuscript template with annotated snippets:
-  - Citation: `[@lastname2023]`
-  - Figure with cross-ref: `` ```{r fig-name} `` + `@fig-name`
-  - Table with cross-ref (via `knitr::kable()` or `gt`)
-  - Inline equation: `$y = \beta_0 + \beta_1 x$`
-  - Display equation: `$$...$$`
-  - Section cross-ref: `@sec-introduction`
-- Keep examples as a separate string constant (e.g., `quarto_examples_content`) and `paste0()` it onto whichever manuscript variant was selected — same pattern already used for `stat_decl_content`
-- This keeps the default output clean while making it easy to opt in
+**What shipped**: A `tutorial = FALSE` parameter. When `TRUE`, `manuscript_body_tutorial` replaces the placeholder body with **live, rendering** examples (rather than commented-out snippets, so students see both the source and the output):
+  - Citation: `[@article_key_here]` / `@book_key_here` (keys already in the generated `references.bib`)
+  - Figure with cross-ref: base R `plot()` chunk `#| label: fig-scatter` + `@fig-scatter`
+  - Table with cross-ref: `knitr::kable(head(mtcars))` chunk `#| label: tbl-summary` + `@tbl-summary`
+  - Inline equation `$y = \beta_0 + \beta_1 x$` and display equation `$$...$$ {#eq-model}` + `@eq-model`
+  - Section cross-ref: `@sec-tables`, `@sec-figures`
+  - Prose formatting (bold/italic/code, lists, block quote)
+
+Uses only base R + knitr (no new dependencies). Composed via the shared body/trailer pattern (same idea as `stat_decl_content`).
 
 ---
 

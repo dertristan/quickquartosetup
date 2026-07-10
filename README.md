@@ -17,7 +17,8 @@ Whether you're writing a manuscript, preparing a presentation, or organizing you
 - **Built-in Quarto integration** -- Generates `.qmd` files for the manuscript, presentation, and code template, plus a `references.bib` and a `.gitignore`.
 - **Centralized project metadata** -- A single `_quarto.yml` defines the shared author/date/bibliography/execute defaults for every document.
 - **Student-ready options** -- Include a bilingual (German/English) statutory declaration and a student ID footnote for term papers.
-- **Native title page** -- Optional `title-page.tex` included before the manuscript body. No Quarto extensions required. ⚠️ Experimental and not yet fully supported.
+- **Live Quarto tutorial** -- With `tutorial = TRUE`, the manuscript is filled with real, rendering examples (prose formatting, a table, a figure, equations, cross-references, and citations) so the scaffold doubles as a worked Quarto reference. Uses only base R + knitr -- no extra packages.
+- **Native title page** -- With `titlepage = TRUE`, a single, easy-to-edit `title-page.tex` cover page is generated and the front matter is arranged as cover page → abstract → table of contents → body. No Quarto extensions required.
 - **Quarto getting-started links** -- Each generated document carries a link to the relevant Quarto documentation page, so students can quickly find help.
 
 ---
@@ -56,7 +57,7 @@ This scaffolds:
 - `references.bib` -- shared bibliography
 - `.gitignore`
 
-When `title_page = TRUE` a native `title-page.tex` snippet is added and pulled in via `include-before-body`.
+When `titlepage = TRUE` a native `title-page.tex` cover page is added (pulled in via `include-before-body`) and the front matter renders as cover page → abstract → table of contents → body. When `tutorial = TRUE` the manuscript body is populated with live, rendering Quarto examples instead of placeholder text.
 
 **Project structure (defaults)**:
 
@@ -87,6 +88,8 @@ qqs(
   title = "There and Back Again",
   subtitle = "A Hobbit's Holiday",
   student_id = 3791,
+  titlepage = TRUE,   # cover page -> abstract -> TOC -> body
+  tutorial = TRUE,    # fill the manuscript with live Quarto examples
   stat_decl = TRUE
 )
 ```
